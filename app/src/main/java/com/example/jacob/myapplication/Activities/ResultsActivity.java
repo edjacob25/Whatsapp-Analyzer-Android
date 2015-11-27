@@ -26,12 +26,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.jacob.myapplication.AnalyzePeopleTask;
 import com.example.jacob.myapplication.Constants;
 import com.example.jacob.myapplication.Logic.ConversationData;
 import com.example.jacob.myapplication.Logic.ConversationDataDB;
 import com.example.jacob.myapplication.Logic.IConversationData;
 import com.example.jacob.myapplication.PeopleListAdapter;
 import com.example.jacob.myapplication.R;
+import com.example.jacob.myapplication.ShareScreenshotTask;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -81,6 +83,8 @@ public class ResultsActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
+        if (Constants.conversationData.getClass().equals(ConversationData.class))
+            new AnalyzePeopleTask(this).execute();
     }
 
 
@@ -88,6 +92,8 @@ public class ResultsActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(final Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_results, menu);
+        if (Constants.conversationData.getClass().equals(ConversationDataDB.class))
+            menu.getItem(0).setEnabled(false);
         return true;
     }
 
@@ -112,51 +118,7 @@ public class ResultsActivity extends AppCompatActivity {
     }
 
     public void share(){
-        Bitmap myBitmap;
-        Log.i("Mira", mViewPager.getCurrentItem() + "");
-        View v1 =
-         mViewPager.getChildAt(mViewPager.getCurrentItem()).getRootView();
-
-        //getWindow().getDecorView().getRootView(); View v1 = iv.getRootView(); //even this works
-        // View v1 = findViewById(android.R.id.content); //this works too
-        // but gives only content
-        v1.setDrawingCacheEnabled(true);
-        myBitmap = v1.getDrawingCache();
-        saveBitmap(myBitmap);
-    }
-
-    public void saveBitmap(Bitmap bitmap) {
-        Date now = new Date();
-        android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", now);
-        File dir = new File(Environment.getExternalStorageDirectory()
-                + File.separator + "WhatsAppAnalyzer");
-        if (!dir.exists())
-            dir.mkdir();
-        String filePath = Environment.getExternalStorageDirectory()
-                + File.separator + "WhatsAppAnalyzer" + File.separator + now +  ".png";
-        File imagePath = new File(filePath);
-        FileOutputStream fos;
-        try {
-            fos = new FileOutputStream(imagePath);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
-            fos.flush();
-            fos.close();
-            sendIntent(filePath);
-        } catch (FileNotFoundException e) {
-            Log.e("GREC", e.getMessage(), e);
-        } catch (IOException e) {
-            Log.e("GREC", e.getMessage(), e);
-        }
-    }
-
-    public void sendIntent(String path) {
-        Intent intent = new Intent(android.content.Intent.ACTION_SEND);
-        intent.putExtra(android.content.Intent.EXTRA_TEXT,
-                "Generated with Whatsapp Analyzer");
-        intent.setType("image/png");
-        Uri myUri = Uri.parse("file://" + path);
-        intent.putExtra(Intent.EXTRA_STREAM, myUri);
-        startActivity(Intent.createChooser(intent, "Send image"));
+        new ShareScreenshotTask(this).execute();
     }
 
 

@@ -61,8 +61,11 @@ public class SavedDataAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         convertView = inflater.inflate(R.layout.conversation_list_item, null);
-        TextView contactName = (TextView) convertView.findViewById(R.id.conversation_name);
-        contactName.setText(conversations.get(position).getConversationName());
+        TextView conversationName = (TextView) convertView.findViewById(R.id.conversation_item_name);
+        conversationName.setText(conversations.get(position).getConversationName());
+        TextView conversationMessages = (TextView) convertView.findViewById(R.id.conversation_item_msg);
+        String msgs = conversations.get(position).getTotalMessages() + " messages";
+        conversationMessages.setText(msgs);
         return convertView;
     }
 }

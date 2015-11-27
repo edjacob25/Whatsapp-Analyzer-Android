@@ -33,7 +33,7 @@ public class CreateDataTask extends AsyncTask<ParcelFileDescriptor, Void, Conver
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        //myAct.findViewById(R.id.people_list_panel).setVisibility(View.INVISIBLE);
+        myAct.findViewById(R.id.saved_analysis_list).setVisibility(View.INVISIBLE);
         //Debug.startMethodTracing("analysis");
         myAct.findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
     }
@@ -49,6 +49,7 @@ public class CreateDataTask extends AsyncTask<ParcelFileDescriptor, Void, Conver
     protected void onPostExecute(ConversationData o) {
         super.onPostExecute(o);
         if (o != null){
+            myAct.findViewById(R.id.saved_analysis_list).setVisibility(View.VISIBLE);
             myAct.findViewById(R.id.loadingPanel).setVisibility(View.GONE);
             Constants.conversationData = o;
             Intent intent = new Intent(myAct, ResultsActivity.class);

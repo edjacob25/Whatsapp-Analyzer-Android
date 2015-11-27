@@ -15,12 +15,15 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.jacob.myapplication.Constants;
 import com.example.jacob.myapplication.CreateDataTask;
 import com.example.jacob.myapplication.DB.DataDBHandler;
 import com.example.jacob.myapplication.DB.SavedDataAdapter;
+import com.example.jacob.myapplication.Logic.IConversationData;
 import com.example.jacob.myapplication.R;
 
 import java.io.FileNotFoundException;
@@ -38,6 +41,15 @@ public class MainActivity extends AppCompatActivity {
         SavedDataAdapter sva = new SavedDataAdapter(this, Constants.dbHandler.getAllData());
         ListView l = (ListView) findViewById(R.id.saved_analysis_list);
         l.setAdapter(sva);
+        l.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //Toast.makeText(view.getContext(), "item", Toast.LENGTH_SHORT).show();
+                Constants.conversationData =(IConversationData) parent.getItemAtPosition(position);
+                Intent intent = new Intent(view.getContext(), ResultsActivity.class);
+                startActivity(intent);
+            }
+        });
 
         if (getIntent().getAction().equals(Intent.ACTION_VIEW)){
             Uri returnUri = getIntent().getData();
@@ -117,10 +129,5 @@ public class MainActivity extends AppCompatActivity {
             }
             new CreateDataTask(this, uri.getLastPathSegment()).execute(mInputPFD);
         }
-    }
-    @Override
-    public void onResume(){
-        super.onResume();
-
     }
 }

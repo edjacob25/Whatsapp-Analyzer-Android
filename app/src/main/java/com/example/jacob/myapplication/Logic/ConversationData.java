@@ -1,5 +1,7 @@
 package com.example.jacob.myapplication.Logic;
 
+import com.example.jacob.myapplication.DeepAnalysis.Person;
+import com.example.jacob.myapplication.DeepAnalysis.WordAnalyzer;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
@@ -24,12 +26,13 @@ public class ConversationData implements IConversationData {
     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
     private Map<String, Integer> participants = new HashMap<String, Integer>();
     private Map<String, Integer> participantsWords = new HashMap<String, Integer>();
-    //private List<String> messages = new ArrayList<String>();
+    private Map<String,List<String>> messages = new HashMap<>();
     private SortedMap<Date,Integer> days = new TreeMap<Date, Integer>();
     private SortedMap<Date,Integer> totalDays = new TreeMap<Date, Integer>();
     private Map<String, Integer> months = new HashMap<String, Integer>();
     private Map<String, Integer> timeofDay = new HashMap<String, Integer>();
     private String conversationName;
+    private ArrayList<Person> personData = new ArrayList<>();
 
     public ConversationData(String conversationName) {
         this.conversationName = conversationName;
@@ -40,18 +43,24 @@ public class ConversationData implements IConversationData {
         participants.put(participant,(numMess == null) ? 1: numMess + 1);
 
         Integer numDay = days.get(date);
-        days.put(date,(numDay == null) ? 1: numDay + 1);
+        days.put(date, (numDay == null) ? 1 : numDay + 1);
 
         /* -1 added for the first space at the start */
         Integer wordsAcc = participantsWords.get(participant);
         int words = message.split(" ").length - 1;
-        participantsWords.put(participant,(wordsAcc == null) ? words : wordsAcc + words);
+        participantsWords.put(participant, (wordsAcc == null) ? words : wordsAcc + words);
 
         /*if (!message.equals(" <Archivo omitido>"))
             messages.add(message);*/
 
         Integer timeCount = timeofDay.get(time);
         timeofDay.put(time, (timeCount == null) ? 1 : timeCount + 1);
+
+        ArrayList<String> msgsList = (ArrayList<String>) messages.get(participant);
+        if (msgsList == null)
+            msgsList = new ArrayList<String>();
+        msgsList.add(message);
+        messages.put(participant, msgsList);
     }
 
     public void addData(AnalyzedLine a){
@@ -76,6 +85,17 @@ public class ConversationData implements IConversationData {
             iterator = calendar.getTime();
             totalDays.put(iterator, (days.containsKey(iterator)) ? days.get(iterator) : 0);
         }
+    }
+
+    public void createPeopleData(){
+        WordAnalyzer wa = new WordAnalyzer();
+        for (String s : participants.keySet()) {
+            personData.add(wa.analyze(s,(ArrayList<String>) messages.get(s)));
+        }
+    }
+
+    public Person getPersonData(int i){
+        return personData.get(i);
     }
 
     @Override
