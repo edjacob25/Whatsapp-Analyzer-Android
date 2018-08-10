@@ -3,17 +3,13 @@ package com.example.jacob.myapplication.activities
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
-import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
 import android.util.TypedValue
 import android.view.*
-import android.widget.ListView
-import android.widget.TextView
 import android.widget.Toast
 import com.example.jacob.myapplication.Constants
 import com.example.jacob.myapplication.PeopleListAdapter
@@ -23,13 +19,16 @@ import com.example.jacob.myapplication.logic.ConversationDataDB
 import com.example.jacob.myapplication.tasks.AnalyzePeopleTask
 import com.example.jacob.myapplication.tasks.ShareScreenshotTask
 import com.github.mikephil.charting.charts.LineChart
-import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.formatter.IAxisValueFormatter
 import com.github.mikephil.charting.formatter.PercentFormatter
-import java.text.SimpleDateFormat
+import kotlinx.android.synthetic.main.activity_results.*
+import kotlinx.android.synthetic.main.days_results.view.*
+import kotlinx.android.synthetic.main.general_data_results.view.*
+import kotlinx.android.synthetic.main.hours_results.view.*
+import kotlinx.android.synthetic.main.participants_data_results.view.*
 
 class ResultsActivity : AppCompatActivity() {
 
@@ -45,14 +44,10 @@ class ResultsActivity : AppCompatActivity() {
     /**
      * The [ViewPager] that will host the section contents.
      */
-    private var mViewPager: ViewPager? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_results)
 
-
-        val toolbar = findViewById<View>(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         // Create the adapter that will return a fragment for each of the three
@@ -60,11 +55,8 @@ class ResultsActivity : AppCompatActivity() {
         mSectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = findViewById<View>(R.id.container) as ViewPager
-        mViewPager!!.adapter = mSectionsPagerAdapter
-
-        val tabLayout = findViewById<View>(R.id.tabs) as TabLayout
-        tabLayout.setupWithViewPager(mViewPager)
+        container.adapter = mSectionsPagerAdapter
+        tabs.setupWithViewPager(container)
 
         if (Constants.conversationData.javaClass == ConversationData::class.java)
             AnalyzePeopleTask(this).execute()
@@ -94,12 +86,12 @@ class ResultsActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    fun share() {
+    private fun share() {
         ShareScreenshotTask(this).execute()
     }
 
 
-    fun saveDB() {
+    private fun saveDB() {
         Toast.makeText(this, "Saving", Toast.LENGTH_LONG).show()
         Constants.dbHandler.insert(ConversationDataDB(Constants.conversationData))
     }
@@ -138,76 +130,58 @@ class ResultsActivity : AppCompatActivity() {
 
         private fun createGeneralResultsView(rootView: View) {
             val cv = Constants.conversationData
-            val sdf = SimpleDateFormat("dd/MM/yyyy")
 
-            val days = rootView.findViewById<TextView>(R.id.conversationDays)
-            days.text = cv.totalDaysTalked.toString() + ""
+            rootView.conversationDays.text = "${cv.totalDaysTalked}"
+            rootView.totalMessages.text = "${cv.totalMessages}"
+            rootView.msg_avg.text = String.format("%.2f", cv.dailyAvg)
+            rootView.msg_real_avg.text = String.format("%.2f", cv.realDailyAvg)
 
-            val totalMsgs = rootView.findViewById<View>(R.id.totalMessages) as TextView
-            totalMsgs.text = cv.totalMessages.toString() + ""
-
-            val avg = rootView.findViewById<View>(R.id.msg_avg) as TextView
-            avg.text = String.format("%.2f", cv.dailyAvg)
-
-            val real_avg = rootView.findViewById<View>(R.id.msg_real_avg) as TextView
-            real_avg.text = String.format("%.2f", cv.realDailyAvg)
-
-            val mtDay = rootView.findViewById<View>(R.id.most_talked_day) as TextView
             val day = cv.mostTalkedDay
-            val mtDayString = "Is " + sdf.format(day) + " with " +
-                    cv.getDayData(day) + " messages."
-            mtDay.text = mtDayString
-
-            val mtMonth = rootView.findViewById<View>(R.id.most_talked_month) as TextView
-            val mtMonthString = "Is " + cv.mostTalkedMonth + " with " +
-                    cv.getMonthData(cv.mostTalkedMonth) + " messages."
-            mtMonth.text = mtMonthString
+            rootView.most_talked_day.text = getString(R.string.most_talked_day_result, day, cv.getDayData(day))
+            rootView.most_talked_month.text = getString(R.string.most_talked_month_result, cv.mostTalkedMonth, cv.getMonthData(cv.mostTalkedMonth))
         }
 
         private fun createParticipantsView(rootView: View) {
-            val l = rootView.findViewById<View>(R.id.people_list) as ListView
             val peopleListAdapter = PeopleListAdapter(rootView.context, Constants.conversationData)
-            l.adapter = peopleListAdapter
+            rootView.people_list.adapter = peopleListAdapter
         }
 
         private fun createDaysView(rootView: View) {
             val cv = Constants.conversationData as ConversationData
-            val daysChart = rootView.findViewById<View>(R.id.days_chart) as LineChart
             val data = cv.chartDaysData
-            daysChart.data = data.component1()
-            formatLineChart(daysChart, rootView.context, data.component2())
-            val a = Description()
-            a.text = "Days"
-            a.textColor = Color.LTGRAY
-            daysChart.description = a
+            rootView.days_chart.data = data.component1()
+            formatLineChart(rootView.days_chart, rootView.context, data.component2())
+            val description = Description()
+            description.text = "Days"
+            description.textColor = Color.LTGRAY
+            rootView.days_chart.description = description
 
-            val allDaysChart = rootView.findViewById<View>(R.id.all_days_chart) as LineChart
+
             val data2 = cv.allDaysChartData
-            allDaysChart.data = data2.component1()
-            formatLineChart(allDaysChart, rootView.context, data2.component2())
-            a.text = "All days"
-            allDaysChart.description = a
+            rootView.all_days_chart.data = data2.component1()
+            formatLineChart(rootView.all_days_chart, rootView.context, data2.component2())
+            description.text = "All days"
+            rootView.all_days_chart.description = description
         }
 
         private fun createHoursView(rootView: View) {
             val cv = Constants.conversationData as ConversationData
-            val hoursChart = rootView.findViewById<View>(R.id.hours_chart) as PieChart
-            hoursChart.data = cv.timeChartData
-            hoursChart.data.setValueFormatter(PercentFormatter())
+            rootView.hours_chart.data = cv.timeChartData
+            rootView.hours_chart.data.setValueFormatter(PercentFormatter())
 
             val typedValue = TypedValue()
             val theme = rootView.context.theme
             theme.resolveAttribute(R.attr.colorPrimary, typedValue, true)
-            hoursChart.setHoleColor(0)
+            rootView.hours_chart.setHoleColor(0)
             theme.resolveAttribute(R.attr.colorAccent, typedValue, true)
             val color = typedValue.data
-            (hoursChart.data.dataSet as PieDataSet).setColors(color, color + 50, color - 50, color + 100, color - 100)
-            hoursChart.setUsePercentValues(true)
-            hoursChart.centerText = "Time of the day"
-            hoursChart.setCenterTextColor(Color.LTGRAY)
+            (rootView.hours_chart.data.dataSet as PieDataSet).setColors(color, color + 50, color - 50, color + 100, color - 100)
+            rootView.hours_chart.setUsePercentValues(true)
+            rootView.hours_chart.centerText = "Time of the day"
+            rootView.hours_chart.setCenterTextColor(Color.LTGRAY)
             val des = Description()
-            hoursChart.description = des
-            hoursChart.legend.isEnabled = false
+            rootView.hours_chart.description = des
+            rootView.hours_chart.legend.isEnabled = false
         }
 
         private fun formatLineChart(ln: LineChart, cont: Context, tags: List<String>) {
@@ -216,22 +190,17 @@ class ResultsActivity : AppCompatActivity() {
             val xAxis = ln.xAxis
             xAxis.textColor = Color.LTGRAY
             xAxis.position = XAxis.XAxisPosition.BOTTOM
-
-            val formatter = IAxisValueFormatter { value, axis -> tags[value.toInt()] }
-
+            val formatter = IAxisValueFormatter { value, _ -> tags[value.toInt()] }
             xAxis.valueFormatter = formatter
-
 
             val typedValue = TypedValue()
             val theme = cont.theme
             theme.resolveAttribute(R.attr.colorPrimary, typedValue, true)
             ln.setGridBackgroundColor(typedValue.data)
-            //ln.setDescriptionColor(Color.LTGRAY);
             ln.setBorderColor(Color.LTGRAY)
             ln.axisRight.isEnabled = false
             ln.legend.textColor = Color.LTGRAY
             ln.lineData.setValueTextColor(Color.LTGRAY)
-            //ln.getLineData().getDataSetByIndex(0).setColors(new int[]{color, color + 100, color - 100});
         }
 
         companion object {
@@ -239,7 +208,7 @@ class ResultsActivity : AppCompatActivity() {
              * The fragment argument representing the section number for this
              * fragment.
              */
-            private val ARG_SECTION_NUMBER = "section_number"
+            private const val ARG_SECTION_NUMBER = "section_number"
 
             /**
              * Returns a new instance of this fragment for the given section
@@ -275,10 +244,10 @@ class ResultsActivity : AppCompatActivity() {
 
         override fun getPageTitle(position: Int): CharSequence? {
             when (position) {
-                0 -> return "General Data"
-                1 -> return "Participants"
-                2 -> return "Days"
-                3 -> return "Hours"
+                0 -> return getString(R.string.general_data_title)
+                1 -> return getString(R.string.participants_title)
+                2 -> return getString(R.string.days)
+                3 -> return getString(R.string.time_of_the_day_title)
             }
             return null
         }

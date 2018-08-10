@@ -14,10 +14,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Days since the conversation started"
+            android:text="@string/days_since_the_conversation_started"
             />
         <TextView
-            android:text="placeholder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/conversationDays" />
@@ -32,10 +31,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Total messages"
+            android:text="@string/total_messages"
             />
         <TextView
-            android:text="placeholder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/totalMessages" />
@@ -50,10 +48,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Message's average"
+            android:text="@string/messages_average"
             />
         <TextView
-            android:text="placeholder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/msg_avg" />
@@ -68,10 +65,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Real message's average (including all days)"
+            android:text="@string/real_messages_average"
             />
         <TextView
-            android:text="placeholder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/msg_real_avg" />
@@ -86,10 +82,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Most talked day"
+            android:text="@string/most_talked_day"
             />
         <TextView
-            android:text="placeholder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/most_talked_day" />
@@ -104,11 +99,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Most talked month"
+            android:text="@string/most_talked_month"
             />
 
         <TextView
-            android:text="placeholder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/most_talked_month" />

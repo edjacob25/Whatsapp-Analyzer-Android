@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">WhatsApp Analyzer</string>
+    <string name="app_name" translatable="false">WhatsApp Analyzer</string>
     <string name="action_settings">Settings</string>
     <string name="action_share">Share</string>
     <string name="participant_header_name">Name</string>
@@ -7,6 +7,18 @@
     <string name="participant_header_words_avg">Words average</string>
     <string name="analyzing">Analyzing</string>
     <string name="title_activity_results">Results</string>
-    <string name="section_format">Hello World from section: %1$d</string>
     <string name="days">Days</string>
+    <string name="most_talked_day_result">Is %1$td/%1$tm/%1$ty with %2$d messages.</string>
+    <string name="most_talked_month_result">Is %1$s with %2$d messages.</string>
+    <string name="days_since_the_conversation_started">Days since the conversation started</string>
+    <string name="total_messages">Total messages</string>
+    <string name="messages_average">Message\'s average</string>
+    <string name="real_messages_average">Real message\'s average (including all days)</string>
+    <string name="most_talked_day">Most talked day</string>
+    <string name="most_talked_month">Most talked month</string>
+    <string name="save">Save</string>
+    <string name="general_data_title">General Data</string>
+    <string name="participants_title">Participants</string>
+    <string name="time_of_the_day_title">Time of the day</string>
+    <string name="messages">%d messages</string>
 </resources>

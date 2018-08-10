@@ -6,13 +6,11 @@ import android.os.Bundle
 import android.os.Environment
 import android.os.ParcelFileDescriptor
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
-import android.widget.ListView
 import com.example.jacob.myapplication.Constants
 import com.example.jacob.myapplication.R
 import com.example.jacob.myapplication.db.DataDBHandler
@@ -21,6 +19,8 @@ import com.example.jacob.myapplication.logic.IConversationData
 import com.example.jacob.myapplication.tasks.CreateDataTask
 import com.nononsenseapps.filepicker.FilePickerActivity
 import com.nononsenseapps.filepicker.Utils
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.content_main.*
 import java.io.FileNotFoundException
 
 class MainActivity : AppCompatActivity() {
@@ -28,16 +28,14 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
 
         Constants.dbHandler = DataDBHandler(this)
 
         val sva = SavedDataAdapter(this, Constants.dbHandler.allData)
-        val l = findViewById<ListView>(R.id.saved_analysis_list)
-        l.adapter = sva
+        saved_analysis_list.adapter = sva
 
-        l.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+        saved_analysis_list.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, _ ->
             Constants.conversationData = parent.getItemAtPosition(position) as IConversationData
             val intent = Intent(view.context, ResultsActivity::class.java)
             startActivity(intent)

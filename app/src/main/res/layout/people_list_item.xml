@@ -14,7 +14,9 @@
         android:layout_weight="2"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:paddingStart="@dimen/fab_margin"
-        />
+        android:paddingEnd="@dimen/fab_margin"
+
+    />
 
     <TextView
         android:layout_width="0dp"

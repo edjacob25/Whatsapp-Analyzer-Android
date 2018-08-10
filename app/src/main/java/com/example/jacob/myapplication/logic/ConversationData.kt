@@ -54,9 +54,9 @@ class ConversationData(private val conversationName: String) : IConversationData
     }
 
     fun createMonthsData() {
-        val sdf = SimpleDateFormat("MM-yyyy")
+        val sdf = SimpleDateFormat("MM/yyyy")
         for (iterator in days.keys) {
-            months.merge(sdf.format(iterator), days.getValue(iterator), { currentValue, daysValue -> currentValue + daysValue })
+            months.merge(sdf.format(iterator), days.getValue(iterator)) { currentValue, daysValue -> currentValue + daysValue }
         }
     }
 

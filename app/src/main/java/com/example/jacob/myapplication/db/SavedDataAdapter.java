@@ -16,7 +16,7 @@ import java.util.ArrayList;
  * Created by jacob on 19/11/15.
  */
 public class SavedDataAdapter extends BaseAdapter {
-    private ArrayList<ConversationDataDB> conversations = new ArrayList<ConversationDataDB>();
+    private ArrayList<ConversationDataDB> conversations = new ArrayList<>();
     private LayoutInflater inflater;
 
     public SavedDataAdapter(Context context, Cursor c) {
@@ -60,11 +60,10 @@ public class SavedDataAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         convertView = inflater.inflate(R.layout.conversation_list_item, null);
-        TextView conversationName = (TextView) convertView.findViewById(R.id.conversation_item_name);
+        TextView conversationName = convertView.findViewById(R.id.conversation_item_name);
         conversationName.setText(conversations.get(position).getConversationName());
-        TextView conversationMessages = (TextView) convertView.findViewById(R.id.conversation_item_msg);
-        String msgs = conversations.get(position).getTotalMessages() + " messages";
-        conversationMessages.setText(msgs);
+        TextView conversationMessages =  convertView.findViewById(R.id.conversation_item_msg);
+        conversationMessages.setText(parent.getResources().getString(R.string.messages, conversations.get(position).getTotalMessages()));
         return convertView;
     }
 }

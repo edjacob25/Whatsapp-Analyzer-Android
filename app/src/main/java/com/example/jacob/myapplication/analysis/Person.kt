@@ -4,12 +4,10 @@ package com.example.jacob.myapplication.analysis
  * Created by jacob on 25/11/2015.
  */
 class Person(name: String) : SentimentData(0f, 0f, 0f, 0f, 0f) {
-    var wordsAnalyzed = 0
-        internal set
-    var emoticons = 0
-        internal set
-    var swears = 0
-        internal set
+    private var wordsAnalyzed = 0
+    private var emoticons = 0
+    private var swears = 0
+
     var name: String
         internal set
 

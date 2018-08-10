@@ -39,9 +39,9 @@ public class PeopleListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         convertView = inflater.inflate(R.layout.people_list_item, null);
-        TextView tName = (TextView) convertView.findViewById(R.id.people_name);
-        TextView tPercentage = (TextView) convertView.findViewById(R.id.people_percentage);
-        TextView tWords = (TextView) convertView.findViewById(R.id.words_per_message);
+        TextView tName = convertView.findViewById(R.id.people_name);
+        TextView tPercentage = convertView.findViewById(R.id.people_percentage);
+        TextView tWords = convertView.findViewById(R.id.words_per_message);
         String name = cv.getParticipants().get(position);
         tName.setText(name);
         String percentage = String.format("%.2f%%", cv.getParticipantShare(name));
