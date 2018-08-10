@@ -6,7 +6,7 @@ import android.os.AsyncTask;
 import android.os.ParcelFileDescriptor;
 import android.view.View;
 
-import com.example.jacob.myapplication.Activities.ResultsActivity;
+import com.example.jacob.myapplication.activities.ResultsActivity;
 import com.example.jacob.myapplication.Constants;
 import com.example.jacob.myapplication.Logic.AnalyzedLine;
 import com.example.jacob.myapplication.Logic.ConversationData;

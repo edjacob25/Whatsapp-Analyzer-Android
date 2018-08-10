@@ -8,11 +8,9 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.jacob.myapplication.Activities.PersonActivity;
+import com.example.jacob.myapplication.activities.PersonActivity;
 import com.example.jacob.myapplication.Constants;
-import com.example.jacob.myapplication.DeepAnalysis.Person;
 import com.example.jacob.myapplication.Logic.ConversationData;
-import com.example.jacob.myapplication.Logic.IConversationData;
 import com.example.jacob.myapplication.R;
 
 /**

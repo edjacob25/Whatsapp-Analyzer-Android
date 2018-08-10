@@ -1,11 +1,9 @@
-package com.example.jacob.myapplication.Activities;
+package com.example.jacob.myapplication.activities;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.ParcelFileDescriptor;
@@ -24,7 +22,6 @@ import com.example.jacob.myapplication.DB.DataDBHandler;
 import com.example.jacob.myapplication.DB.SavedDataAdapter;
 import com.example.jacob.myapplication.Logic.IConversationData;
 import com.example.jacob.myapplication.R;
-import com.nononsenseapps.filepicker.FilePickerActivity;
 import com.nononsenseapps.filepicker.Utils;
 
 import java.io.FileNotFoundException;

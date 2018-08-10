@@ -1,4 +1,4 @@
-package com.example.jacob.myapplication.Activities;
+package com.example.jacob.myapplication.activities;
 
 import com.example.jacob.myapplication.FilteredFilePicker;
 import com.nononsenseapps.filepicker.AbstractFilePickerActivity;

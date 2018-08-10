@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
         <activity
-            android:name=".Activities.MainActivity"
+            android:name=".activities.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
@@ -30,7 +30,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activities.MyPickerActivity"
+            android:name=".activities.MyPickerActivity"
             android:label="@string/app_name"
             android:theme="@style/FilePickerTheme">
             <intent-filter>
@@ -39,15 +39,15 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activities.ResultsActivity"
+            android:name=".activities.ResultsActivity"
             android:label="@string/title_activity_results"
-            android:parentActivityName=".Activities.MainActivity"
+            android:parentActivityName=".activities.MainActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Activities.MainActivity" />
+                android:value=".activities.MainActivity" />
         </activity>
-        <activity android:name=".Activities.PersonActivity"></activity>
+        <activity android:name=".activities.PersonActivity"></activity>
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.provider"

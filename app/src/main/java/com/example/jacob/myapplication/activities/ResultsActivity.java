@@ -1,4 +1,4 @@
-package com.example.jacob.myapplication.Activities;
+package com.example.jacob.myapplication.activities;
 
 import android.content.Context;
 import android.content.res.Resources;

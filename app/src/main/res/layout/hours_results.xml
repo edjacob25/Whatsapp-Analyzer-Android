@@ -6,7 +6,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".Activities.ResultsActivity$PlaceholderFragment">
+    tools:context=".activities.ResultsActivity$PlaceholderFragment">
 
     <com.github.mikephil.charting.charts.PieChart
         android:id="@+id/hours_chart"

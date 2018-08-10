@@ -1,4 +1,4 @@
-package com.example.jacob.myapplication.Activities
+package com.example.jacob.myapplication.activities
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
