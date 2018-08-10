@@ -17,16 +17,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.example.jacob.myapplication.Constants;
-import com.example.jacob.myapplication.CreateDataTask;
+import com.example.jacob.myapplication.Tasks.CreateDataTask;
 import com.example.jacob.myapplication.DB.DataDBHandler;
 import com.example.jacob.myapplication.DB.SavedDataAdapter;
 import com.example.jacob.myapplication.Logic.IConversationData;
 import com.example.jacob.myapplication.R;
+import com.nononsenseapps.filepicker.FilePickerActivity;
+import com.nononsenseapps.filepicker.Utils;
 
 import java.io.FileNotFoundException;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,17 +36,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         Constants.dbHandler = new DataDBHandler(this);
+
         SavedDataAdapter sva = new SavedDataAdapter(this, Constants.dbHandler.getAllData());
-        ListView l = (ListView) findViewById(R.id.saved_analysis_list);
+        ListView l = findViewById(R.id.saved_analysis_list);
         l.setAdapter(sva);
+
         l.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Toast.makeText(view.getContext(), "item", Toast.LENGTH_SHORT).show();
                 Constants.conversationData =(IConversationData) parent.getItemAtPosition(position);
                 Intent intent = new Intent(view.getContext(), ResultsActivity.class);
                 startActivity(intent);
@@ -60,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
                 Log.e("MainActivity", "File not found.");
             }
-            new CreateDataTask(this,returnUri.getLastPathSegment()).execute(mInputPFD);
+            new CreateDataTask(this, returnUri.getLastPathSegment()).execute(mInputPFD);
         }
 
     }
@@ -100,6 +103,8 @@ public class MainActivity extends AppCompatActivity {
         i.putExtra(MyPickerActivity.EXTRA_ALLOW_MULTIPLE, false);
         i.putExtra(MyPickerActivity.EXTRA_ALLOW_CREATE_DIR, false);
         i.putExtra(MyPickerActivity.EXTRA_MODE, MyPickerActivity.MODE_FILE);
+        i.putExtra(MyPickerActivity.EXTRA_SINGLE_CLICK, false);
+        i.putExtra(MyPickerActivity.EXTRA_ALLOW_EXISTING_FILE, true);
 
         // Configure initial directory by specifying a String.
         // You could specify a String like "/storage/emulated/0/", but that can
@@ -109,17 +114,12 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(i, 1);
     }
 
-    public void goToGraphs(View view){
-        Intent intent = new Intent(this, ResultsActivity.class);
-        this.startActivity(intent);
-    }
-
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (resultCode == Activity.RESULT_OK) {
-            Uri uri = data.getData();
+            List<Uri> files = Utils.getSelectedFilesFromResult(data);
+            Uri uri = files.get(0);
             ParcelFileDescriptor mInputPFD = null;
             try {
                 mInputPFD = getContentResolver().openFileDescriptor(uri, "r");

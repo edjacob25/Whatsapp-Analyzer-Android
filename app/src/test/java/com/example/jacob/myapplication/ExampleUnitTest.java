@@ -1,5 +1,7 @@
 package com.example.jacob.myapplication;
 
+import com.example.jacob.myapplication.Logic.LineAnalyzer;
+
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -10,6 +12,6 @@ import static org.junit.Assert.*;
 public class ExampleUnitTest {
     @Test
     public void addition_isCorrect() throws Exception {
-        assertEquals(4, 2 + 2);
+        assertEquals("afternoon", new LineAnalyzer().getTimeOfTheDay(12));
     }
 }

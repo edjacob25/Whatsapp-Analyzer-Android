@@ -1,4 +1,4 @@
-package com.example.jacob.myapplication;
+package com.example.jacob.myapplication.Tasks;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -7,9 +7,11 @@ import android.os.ParcelFileDescriptor;
 import android.view.View;
 
 import com.example.jacob.myapplication.Activities.ResultsActivity;
+import com.example.jacob.myapplication.Constants;
 import com.example.jacob.myapplication.Logic.AnalyzedLine;
 import com.example.jacob.myapplication.Logic.ConversationData;
 import com.example.jacob.myapplication.Logic.LineAnalyzer;
+import com.example.jacob.myapplication.R;
 
 import java.io.BufferedReader;
 import java.io.FileDescriptor;
@@ -40,9 +42,7 @@ public class CreateDataTask extends AsyncTask<ParcelFileDescriptor, Void, Conver
 
     @Override
     protected ConversationData doInBackground(ParcelFileDescriptor...  params) {
-        ConversationData cv;
-        cv =  openFile(params[0]);
-        return cv;
+        return openFile(params[0]);
     }
 
     @Override
@@ -78,7 +78,7 @@ public class CreateDataTask extends AsyncTask<ParcelFileDescriptor, Void, Conver
         }
         catch (IOException e)
         {
-            System.err.println(e);
+            e.printStackTrace();
         }
         data.createTotalDaysData();
         data.createMonthsData();

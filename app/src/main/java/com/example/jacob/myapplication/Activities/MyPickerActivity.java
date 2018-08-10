@@ -15,10 +15,11 @@ public class MyPickerActivity extends AbstractFilePickerActivity<File> {
     @Override
     protected AbstractFilePickerFragment<File> getFragment(
             final String startPath, final int mode, final boolean allowMultiple,
-            final boolean allowCreateDir) {
+            final boolean allowCreateDir, final boolean allowExistingFile,
+            final boolean singleClick) {
         // Only the fragment in this line needs to be changed
         AbstractFilePickerFragment<File> fragment = new FilteredFilePicker();
-        fragment.setArgs(startPath, mode, allowMultiple, allowCreateDir);
+        fragment.setArgs(startPath, mode, allowMultiple, allowCreateDir, allowExistingFile, singleClick);
         return fragment;
     }
 }

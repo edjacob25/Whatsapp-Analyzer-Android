@@ -45,7 +45,7 @@ public class PeopleListAdapter extends BaseAdapter {
         TextView tWords = (TextView) convertView.findViewById(R.id.words_per_message);
         String name = cv.getParticipants().get(position);
         tName.setText(name);
-        String percentage = String.format("%.2f", cv.getParticipantShare(name)) + "%";
+        String percentage = String.format("%.2f%%", cv.getParticipantShare(name));
         tPercentage.setText(percentage);
         tWords.setText(String.format("%.2f", cv.getWordsAvg(name)));
 

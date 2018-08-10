@@ -1,13 +1,9 @@
 package com.example.jacob.myapplication.Activities;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -15,7 +11,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -26,25 +21,28 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.jacob.myapplication.AnalyzePeopleTask;
+import com.example.jacob.myapplication.Tasks.AnalyzePeopleTask;
 import com.example.jacob.myapplication.Constants;
 import com.example.jacob.myapplication.Logic.ConversationData;
 import com.example.jacob.myapplication.Logic.ConversationDataDB;
 import com.example.jacob.myapplication.Logic.IConversationData;
 import com.example.jacob.myapplication.PeopleListAdapter;
 import com.example.jacob.myapplication.R;
-import com.example.jacob.myapplication.ShareScreenshotTask;
+import com.example.jacob.myapplication.Tasks.ShareScreenshotTask;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.PercentFormatter;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 public class ResultsActivity extends AppCompatActivity {
 
@@ -185,7 +183,7 @@ public class ResultsActivity extends AppCompatActivity {
             IConversationData cv =  Constants.conversationData;
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
-            TextView days = (TextView) rootView.findViewById(R.id.conversationDays);
+            TextView days = rootView.findViewById(R.id.conversationDays);
             days.setText(cv.getTotalDaysTalked() + "");
 
             TextView totalMsgs = (TextView) rootView.findViewById(R.id.totalMessages);
@@ -218,53 +216,74 @@ public class ResultsActivity extends AppCompatActivity {
         private void createDaysView(View rootView){
             ConversationData cv = (ConversationData) Constants.conversationData;
             LineChart daysChart = (LineChart) rootView.findViewById(R.id.days_chart);
-            daysChart.setData(cv.getChartDaysData());
-            formatLineChart(daysChart, rootView.getContext());
-            daysChart.setDescription("Days");
+            kotlin.Pair<LineData, List<String>> data = cv.getChartDaysData();
+            daysChart.setData(data.component1());
+            formatLineChart(daysChart, rootView.getContext(),data.component2());
+            Description a = new Description();
+            a.setText("Days");
+            a.setTextColor(Color.LTGRAY);
+            daysChart.setDescription(a);
 
             LineChart allDaysChart = (LineChart) rootView.findViewById(R.id.all_days_chart);
-            allDaysChart.setData(cv.getAllDaysChartData());
-            formatLineChart(allDaysChart, rootView.getContext());
-            allDaysChart.setDescription("All days");
+            kotlin.Pair<LineData, List<String>> data2 = cv.getAllDaysChartData();
+            allDaysChart.setData(data2.component1());
+            formatLineChart(allDaysChart, rootView.getContext(), data2.component2());
+            a.setText("All days");
+            allDaysChart.setDescription(a);
         }
 
         private void createHoursView(View rootView){
             ConversationData cv = (ConversationData) Constants.conversationData;
             PieChart hoursChart = (PieChart) rootView.findViewById(R.id.hours_chart);
             hoursChart.setData(cv.getTimeChartData());
-
+            hoursChart.getData().setValueFormatter(new PercentFormatter());
 
             TypedValue typedValue = new TypedValue();
             Resources.Theme theme = rootView.getContext().getTheme();
             theme.resolveAttribute(R.attr.colorPrimary, typedValue, true);
-            hoursChart.setHoleColorTransparent(true);
+            hoursChart.setHoleColor(0);
             theme.resolveAttribute(R.attr.colorAccent, typedValue, true);
             int color = typedValue.data;
-            hoursChart.getData().getDataSetByIndex(0).setColors(new int[]{color, color + 50, color - 50, color + 100, color - 100});
+            ((PieDataSet)hoursChart.getData().getDataSet()).setColors(color, color + 50, color - 50, color + 100, color - 100);
             hoursChart.setUsePercentValues(true);
             hoursChart.setCenterText("Time of the day");
             hoursChart.setCenterTextColor(Color.LTGRAY);
-            hoursChart.setDescription("");
+            Description des = new Description();
+            hoursChart.setDescription(des);
             hoursChart.getLegend().setEnabled(false);
         }
 
-        private void formatLineChart(LineChart ln, Context cont){
+        private void formatLineChart(LineChart ln, Context cont, final List<String> tags){
             YAxis leftAxis = ln.getAxisLeft();
             leftAxis.setTextColor(Color.LTGRAY);
             XAxis xAxis = ln.getXAxis();
             xAxis.setTextColor(Color.LTGRAY);
             xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+
+            IAxisValueFormatter formatter = new IAxisValueFormatter() {
+
+                @Override
+                public String getFormattedValue(float value, AxisBase axis) {
+                    return tags.get(((int) value));
+                }
+            };
+
+            xAxis.setValueFormatter(formatter);
+
+
             TypedValue typedValue = new TypedValue();
             Resources.Theme theme = cont.getTheme();
             theme.resolveAttribute(R.attr.colorPrimary, typedValue, true);
             ln.setGridBackgroundColor(typedValue.data);
-            ln.setDescriptionColor(Color.LTGRAY);
+            //ln.setDescriptionColor(Color.LTGRAY);
             ln.setBorderColor(Color.LTGRAY);
             ln.getAxisRight().setEnabled(false);
             ln.getLegend().setTextColor(Color.LTGRAY);
             ln.getLineData().setValueTextColor(Color.LTGRAY);
             //ln.getLineData().getDataSetByIndex(0).setColors(new int[]{color, color + 100, color - 100});
         }
+
+
     }
 
     /**

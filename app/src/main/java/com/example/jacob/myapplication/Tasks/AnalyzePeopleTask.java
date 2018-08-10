@@ -1,4 +1,4 @@
-package com.example.jacob.myapplication;
+package com.example.jacob.myapplication.Tasks;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -9,9 +9,11 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.jacob.myapplication.Activities.PersonActivity;
+import com.example.jacob.myapplication.Constants;
 import com.example.jacob.myapplication.DeepAnalysis.Person;
 import com.example.jacob.myapplication.Logic.ConversationData;
 import com.example.jacob.myapplication.Logic.IConversationData;
+import com.example.jacob.myapplication.R;
 
 /**
  * Created by jacob on 27/11/2015.
@@ -25,7 +27,7 @@ public class AnalyzePeopleTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... params) {
-        ((ConversationData)Constants.conversationData).createPeopleData();
+        ((ConversationData) Constants.conversationData).createPeopleData();
         return null;
     }
 
