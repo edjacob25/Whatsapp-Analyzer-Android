@@ -3,19 +3,9 @@ package com.example.jacob.myapplication.logic
 import com.example.jacob.myapplication.analysis.Person
 import com.example.jacob.myapplication.analysis.WordAnalyzer
 import com.github.mikephil.charting.components.YAxis
-import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
-import com.github.mikephil.charting.data.PieData
-import com.github.mikephil.charting.data.PieDataSet
-import com.github.mikephil.charting.data.PieEntry
-
+import com.github.mikephil.charting.data.*
 import java.text.SimpleDateFormat
-import java.util.ArrayList
-import java.util.Calendar
-import java.util.Date
-import java.util.HashMap
-import java.util.TreeMap
+import java.util.*
 
 /**
  * Created by jacob on 20/11/2015.s
@@ -29,7 +19,7 @@ class ConversationData(private val conversationName: String) : IConversationData
     private val totalDays = TreeMap<Date, Int>()
     private val months = HashMap<String, Int>()
     private val timeofDay = HashMap<String, Int>()
-    private val personData : MutableList<Person> = ArrayList()
+    private val personData: MutableList<Person> = ArrayList()
 
     fun addData(participant: String, message: String, date: Date, time: String) {
         val numMess = participants[participant]
@@ -66,7 +56,7 @@ class ConversationData(private val conversationName: String) : IConversationData
     fun createMonthsData() {
         val sdf = SimpleDateFormat("MM-yyyy")
         for (iterator in days.keys) {
-            months.merge(sdf.format(iterator), days.getValue(iterator), {currentValue, daysValue -> currentValue + daysValue }  )
+            months.merge(sdf.format(iterator), days.getValue(iterator), { currentValue, daysValue -> currentValue + daysValue })
         }
     }
 
@@ -84,7 +74,7 @@ class ConversationData(private val conversationName: String) : IConversationData
 
     fun createPeopleData() {
         val wa = WordAnalyzer()
-        participants.keys.map { personData.add(wa.analyze(it, messages.getValue(it) )) }
+        participants.keys.map { personData.add(wa.analyze(it, messages.getValue(it))) }
     }
 
     fun getPersonData(i: Int): Person {
@@ -96,11 +86,11 @@ class ConversationData(private val conversationName: String) : IConversationData
     }
 
     override fun getMostTalkedDay(): Date {
-        return days.maxBy { it.value } ?.key ?: Date(0)
+        return days.maxBy { it.value }?.key ?: Date(0)
     }
 
     override fun getMostTalkedMonth(): String {
-        return months.maxBy { it.value } !!.key
+        return months.maxBy { it.value }!!.key
     }
 
     override fun getConversationName(): String {
@@ -116,7 +106,7 @@ class ConversationData(private val conversationName: String) : IConversationData
     }
 
     override fun getTotalMessages(): Int {
-        return participants.map { it.value } . sum()
+        return participants.map { it.value }.sum()
     }
 
     override fun getTotalDaysTalked(): Int {
@@ -190,7 +180,7 @@ class ConversationData(private val conversationName: String) : IConversationData
 
             timeofDay.map {
                 vals.add(PieEntry(it.value.toFloat(), it.key))
-                            }
+            }
 
             val dt = PieDataSet(vals, "Time of the day")
             dt.axisDependency = YAxis.AxisDependency.LEFT

@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 /**
  * Created by jacob on 22/11/2015.
  */
-public class DataReaderHelper extends SQLiteOpenHelper{
+public class DataReaderHelper extends SQLiteOpenHelper {
 
     public DataReaderHelper(Context context) {
         super(context, DataReaderContract.DATABASE_NAME, null, DataReaderContract.DATABASE_VERSION);

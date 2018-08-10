@@ -7,9 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-
-import com.example.jacob.myapplication.logic.ConversationDataDB;
 import com.example.jacob.myapplication.R;
+import com.example.jacob.myapplication.logic.ConversationDataDB;
 
 import java.util.ArrayList;
 
@@ -21,7 +20,7 @@ public class SavedDataAdapter extends BaseAdapter {
     private LayoutInflater inflater;
 
     public SavedDataAdapter(Context context, Cursor c) {
-        inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (c.moveToFirst()) {
             do {
                 ConversationDataDB conver = new ConversationDataDB(

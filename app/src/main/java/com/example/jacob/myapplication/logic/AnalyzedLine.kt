@@ -1,6 +1,6 @@
 package com.example.jacob.myapplication.logic
 
-import java.util.Date
+import java.util.*
 
 /**
  * Created by jacob on 22/11/2015.

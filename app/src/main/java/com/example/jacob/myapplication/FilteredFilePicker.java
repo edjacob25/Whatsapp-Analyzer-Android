@@ -1,7 +1,6 @@
 package com.example.jacob.myapplication;
 
 import android.support.annotation.NonNull;
-
 import com.nononsenseapps.filepicker.FilePickerFragment;
 
 import java.io.File;
@@ -14,7 +13,6 @@ public class FilteredFilePicker extends FilePickerFragment {
     private static final String EXTENSION = ".txt";
 
     /**
-     *
      * @param file
      * @return The file extension. If file has no extension, it returns null.
      */

@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-
 import com.example.jacob.myapplication.logic.ConversationDataDB;
 
 /**
@@ -13,7 +12,7 @@ import com.example.jacob.myapplication.logic.ConversationDataDB;
 public class DataDBHandler {
     DataReaderHelper dbHelper;
 
-    public DataDBHandler(Context context){
+    public DataDBHandler(Context context) {
         dbHelper = new DataReaderHelper(context);
     }
 
@@ -36,9 +35,9 @@ public class DataDBHandler {
         return newRow;
     }
 
-    public Cursor getAllData(){
+    public Cursor getAllData() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        String[] columns ={
+        String[] columns = {
                 DataReaderContract.DataEntry.COLUMN_NAME_ID,
                 DataReaderContract.DataEntry.COLUMN_NAME_NAME,
                 DataReaderContract.DataEntry.COLUMN_NAME_DAILY_AVG,

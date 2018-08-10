@@ -3,11 +3,7 @@ package com.example.jacob.myapplication.logic;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by jacob on 22/11/2015.
@@ -30,7 +26,7 @@ public class ConversationDataDB implements IConversationData {
         this.dailyAvg = dailyAvg;
         this.mostTalkedDay = new TupleB(mostTalkedDay);
         this.mostTalkedMonth = new TupleA(mostTalkedMonth);
-        Map<String,Triplet> a = new HashMap<String,Triplet>();
+        Map<String, Triplet> a = new HashMap<String, Triplet>();
         String[] parts = participants.split("\\|");
         for (String part : parts) {
             if (!part.equals("")) {
@@ -45,10 +41,10 @@ public class ConversationDataDB implements IConversationData {
         this.totalMessages = totalMessages;
     }
 
-    public ConversationDataDB(IConversationData cv){
-        this.mostTalkedDay = new TupleB(cv.getMostTalkedDay(),cv.getDayData(cv.getMostTalkedDay()));
-        this.mostTalkedMonth = new TupleA(cv.getMostTalkedMonth(),cv.getMonthData(cv.getMostTalkedMonth()));
-        HashMap<String,Triplet> n = new HashMap<String,Triplet>();
+    public ConversationDataDB(IConversationData cv) {
+        this.mostTalkedDay = new TupleB(cv.getMostTalkedDay(), cv.getDayData(cv.getMostTalkedDay()));
+        this.mostTalkedMonth = new TupleA(cv.getMostTalkedMonth(), cv.getMonthData(cv.getMostTalkedMonth()));
+        HashMap<String, Triplet> n = new HashMap<String, Triplet>();
         for (String s : cv.getParticipants()) {
             n.put(s, new Triplet(cv.getParticipantCount(s), cv.getParticipantShare(s), cv.getWordsAvg(s)));
         }
@@ -71,12 +67,12 @@ public class ConversationDataDB implements IConversationData {
     }
 
     @Override
-    public float getParticipantShare(String pt){
+    public float getParticipantShare(String pt) {
         return participants.get(pt).y;
     }
 
     @Override
-    public float getWordsAvg(String pt){
+    public float getWordsAvg(String pt) {
         return participants.get(pt).z;
     }
 
@@ -125,28 +121,28 @@ public class ConversationDataDB implements IConversationData {
         return mostTalkedDay.y;
     }
 
-    public String getMonthDB(){
+    public String getMonthDB() {
         return mostTalkedMonth.toString();
     }
 
-    public String getDayDB(){
+    public String getDayDB() {
         return mostTalkedDay.toString();
     }
 
-    public String getParticipantsDB(){
+    public String getParticipantsDB() {
         String res = "";
         for (String s : participants.keySet()) {
-            res = res + "|"+ s + "-" + participants.get(s).toString();
+            res = res + "|" + s + "-" + participants.get(s).toString();
         }
         return res;
     }
 }
 
-class TupleA implements Serializable{
+class TupleA implements Serializable {
     public String x;
     public int y;
 
-    public TupleA(String s){
+    public TupleA(String s) {
         String[] parts = s.split(",");
         this.x = parts[0];
         this.y = Integer.parseInt(parts[1]);
@@ -159,11 +155,11 @@ class TupleA implements Serializable{
 
     @Override
     public String toString() {
-        return  x +"," + y ;
+        return x + "," + y;
     }
 }
 
-class TupleB implements Serializable{
+class TupleB implements Serializable {
     public Date x;
     public int y;
     public static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -185,21 +181,22 @@ class TupleB implements Serializable{
 
     @Override
     public String toString() {
-        return  sdf.format(x) +"," + y ;
+        return sdf.format(x) + "," + y;
     }
 }
 
-class Triplet implements Serializable{
+class Triplet implements Serializable {
     public final int x;
     public final float y;
     public final float z;
+
     public Triplet(int x, float y, float z) {
         this.x = x;
         this.y = y;
         this.z = z;
     }
 
-    public Triplet(String s){
+    public Triplet(String s) {
         String[] parts = s.split(",");
         this.x = Integer.parseInt(parts[0]);
         this.y = Float.parseFloat(parts[1]);
@@ -208,6 +205,6 @@ class Triplet implements Serializable{
 
     @Override
     public String toString() {
-        return  x + "," + y + "," + z;
+        return x + "," + y + "," + z;
     }
 }

@@ -7,11 +7,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
-
-import com.example.jacob.myapplication.activities.PersonActivity;
 import com.example.jacob.myapplication.Constants;
-import com.example.jacob.myapplication.logic.ConversationData;
 import com.example.jacob.myapplication.R;
+import com.example.jacob.myapplication.activities.PersonActivity;
+import com.example.jacob.myapplication.logic.ConversationData;
 
 /**
  * Created by jacob on 27/11/2015.
@@ -43,6 +42,6 @@ public class AnalyzePeopleTask extends AsyncTask<Void, Void, Void> {
                 myAct.startActivity(intent);
             }
         });
-        Toast.makeText(myAct,"Se hizo",Toast.LENGTH_SHORT).show();
+        Toast.makeText(myAct, "Se hizo", Toast.LENGTH_SHORT).show();
     }
 }

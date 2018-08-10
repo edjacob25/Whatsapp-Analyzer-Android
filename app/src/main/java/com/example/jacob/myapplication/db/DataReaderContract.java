@@ -27,13 +27,14 @@ public class DataReaderContract {
     public static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + DataEntry.TABLE_NAME;
 
-    public DataReaderContract(){}
+    public DataReaderContract() {
+    }
 
-    public static abstract class DataEntry implements BaseColumns{
+    public static abstract class DataEntry implements BaseColumns {
         public static final String TABLE_NAME = "analysis";
         public static final String COLUMN_NAME_ID = "_id";
         public static final String COLUMN_NAME_NAME = "conversationName";
-        public static final String COLUMN_NULLABLE =  "conversationName";
+        public static final String COLUMN_NULLABLE = "conversationName";
         public static final String COLUMN_NAME_DAILY_AVG = "dailyAvg";
         public static final String COLUMN_NAME_REAL_DAILY_AVG = "realDailyAvg";
         public static final String COLUMN_NAME_MOST_TDAY = "mostTalkedDay";

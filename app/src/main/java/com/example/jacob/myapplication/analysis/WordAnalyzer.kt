@@ -1,6 +1,6 @@
 package com.example.jacob.myapplication.analysis
 
-import java.util.HashMap
+import java.util.*
 
 /**
  * Created by jacob on 25/11/2015.

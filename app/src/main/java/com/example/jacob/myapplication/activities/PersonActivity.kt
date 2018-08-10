@@ -1,15 +1,12 @@
 package com.example.jacob.myapplication.activities
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.util.Log
-
 import com.example.jacob.myapplication.Constants
 import com.example.jacob.myapplication.R
-
-import java.util.Locale
-
 import kotlinx.android.synthetic.main.activity_person.*
+import java.util.*
 
 class PersonActivity : AppCompatActivity() {
 

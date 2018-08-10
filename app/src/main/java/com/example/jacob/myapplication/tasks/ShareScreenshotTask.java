@@ -18,9 +18,10 @@ import java.util.Date;
 /**
  * Created by jacob on 24/11/2015.
  */
-public class ShareScreenshotTask extends AsyncTask<Void, Void, String>{
+public class ShareScreenshotTask extends AsyncTask<Void, Void, String> {
 
     private Activity myAct;
+
     public ShareScreenshotTask(Activity myAct) {
         this.myAct = myAct;
     }
@@ -48,7 +49,7 @@ public class ShareScreenshotTask extends AsyncTask<Void, Void, String>{
         if (!dir.exists())
             dir.mkdir();
         String filePath = Environment.getExternalStorageDirectory()
-                + File.separator + "WhatsAppAnalyzer" + File.separator + now +  ".png";
+                + File.separator + "WhatsAppAnalyzer" + File.separator + now + ".png";
         File imagePath = new File(filePath);
         FileOutputStream fos;
         try {
