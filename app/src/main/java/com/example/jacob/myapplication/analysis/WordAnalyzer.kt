@@ -1,6 +1,5 @@
-package com.example.jacob.myapplication.DeepAnalysis
+package com.example.jacob.myapplication.analysis
 
-import java.util.ArrayList
 import java.util.HashMap
 
 /**

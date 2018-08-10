@@ -1,4 +1,4 @@
-package com.example.jacob.myapplication.Tasks;
+package com.example.jacob.myapplication.tasks;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,9 +8,9 @@ import android.view.View;
 
 import com.example.jacob.myapplication.activities.ResultsActivity;
 import com.example.jacob.myapplication.Constants;
-import com.example.jacob.myapplication.Logic.AnalyzedLine;
-import com.example.jacob.myapplication.Logic.ConversationData;
-import com.example.jacob.myapplication.Logic.LineAnalyzer;
+import com.example.jacob.myapplication.logic.AnalyzedLine;
+import com.example.jacob.myapplication.logic.ConversationData;
+import com.example.jacob.myapplication.logic.LineAnalyzer;
 import com.example.jacob.myapplication.R;
 
 import java.io.BufferedReader;

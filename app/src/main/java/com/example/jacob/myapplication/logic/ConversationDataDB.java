@@ -1,4 +1,4 @@
-package com.example.jacob.myapplication.Logic;
+package com.example.jacob.myapplication.logic;
 
 import java.io.Serializable;
 import java.text.ParseException;

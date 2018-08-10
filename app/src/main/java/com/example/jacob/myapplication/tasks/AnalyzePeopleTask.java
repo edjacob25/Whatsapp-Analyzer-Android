@@ -1,4 +1,4 @@
-package com.example.jacob.myapplication.Tasks;
+package com.example.jacob.myapplication.tasks;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 import com.example.jacob.myapplication.activities.PersonActivity;
 import com.example.jacob.myapplication.Constants;
-import com.example.jacob.myapplication.Logic.ConversationData;
+import com.example.jacob.myapplication.logic.ConversationData;
 import com.example.jacob.myapplication.R;
 
 /**

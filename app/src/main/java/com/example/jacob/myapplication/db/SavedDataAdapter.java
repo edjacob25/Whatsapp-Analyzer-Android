@@ -1,4 +1,4 @@
-package com.example.jacob.myapplication.DB;
+package com.example.jacob.myapplication.db;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.example.jacob.myapplication.Logic.ConversationDataDB;
+import com.example.jacob.myapplication.logic.ConversationDataDB;
 import com.example.jacob.myapplication.R;
 
 import java.util.ArrayList;

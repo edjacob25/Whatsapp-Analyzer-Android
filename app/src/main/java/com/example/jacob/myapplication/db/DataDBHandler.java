@@ -1,11 +1,11 @@
-package com.example.jacob.myapplication.DB;
+package com.example.jacob.myapplication.db;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.example.jacob.myapplication.Logic.ConversationDataDB;
+import com.example.jacob.myapplication.logic.ConversationDataDB;
 
 /**
  * Created by jacob on 22/11/2015.

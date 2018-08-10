@@ -1,4 +1,4 @@
-package com.example.jacob.myapplication.DB;
+package com.example.jacob.myapplication.db;
 
 import android.provider.BaseColumns;
 

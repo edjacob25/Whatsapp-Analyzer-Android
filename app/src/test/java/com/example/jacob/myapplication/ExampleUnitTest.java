@@ -1,6 +1,6 @@
 package com.example.jacob.myapplication;
 
-import com.example.jacob.myapplication.Logic.LineAnalyzer;
+import com.example.jacob.myapplication.logic.LineAnalyzer;
 
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package com.example.jacob.myapplication.DeepAnalysis
+package com.example.jacob.myapplication.analysis
 
 /**
  * Created by jacob on 25/11/2015.

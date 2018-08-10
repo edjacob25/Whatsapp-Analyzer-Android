@@ -17,10 +17,10 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.jacob.myapplication.Constants;
-import com.example.jacob.myapplication.Tasks.CreateDataTask;
-import com.example.jacob.myapplication.DB.DataDBHandler;
-import com.example.jacob.myapplication.DB.SavedDataAdapter;
-import com.example.jacob.myapplication.Logic.IConversationData;
+import com.example.jacob.myapplication.tasks.CreateDataTask;
+import com.example.jacob.myapplication.db.DataDBHandler;
+import com.example.jacob.myapplication.db.SavedDataAdapter;
+import com.example.jacob.myapplication.logic.IConversationData;
 import com.example.jacob.myapplication.R;
 import com.nononsenseapps.filepicker.Utils;
 

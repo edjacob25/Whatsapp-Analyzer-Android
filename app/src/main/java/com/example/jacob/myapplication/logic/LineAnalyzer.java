@@ -1,4 +1,4 @@
-package com.example.jacob.myapplication.Logic;
+package com.example.jacob.myapplication.logic;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

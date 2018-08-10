@@ -1,4 +1,4 @@
-package com.example.jacob.myapplication.Tasks;
+package com.example.jacob.myapplication.tasks;
 
 import android.app.Activity;
 import android.content.Intent;

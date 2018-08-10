@@ -1,7 +1,7 @@
-package com.example.jacob.myapplication.Logic
+package com.example.jacob.myapplication.logic
 
-import com.example.jacob.myapplication.DeepAnalysis.Person
-import com.example.jacob.myapplication.DeepAnalysis.WordAnalyzer
+import com.example.jacob.myapplication.analysis.Person
+import com.example.jacob.myapplication.analysis.WordAnalyzer
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData

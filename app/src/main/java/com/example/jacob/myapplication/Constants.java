@@ -1,8 +1,8 @@
 package com.example.jacob.myapplication;
 
-import com.example.jacob.myapplication.DB.DataDBHandler;
-import com.example.jacob.myapplication.DeepAnalysis.Person;
-import com.example.jacob.myapplication.Logic.IConversationData;
+import com.example.jacob.myapplication.db.DataDBHandler;
+import com.example.jacob.myapplication.analysis.Person;
+import com.example.jacob.myapplication.logic.IConversationData;
 
 /**
  * Created by jacob on 21/11/2015.

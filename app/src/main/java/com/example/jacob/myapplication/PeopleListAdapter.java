@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.example.jacob.myapplication.Logic.IConversationData;
+import com.example.jacob.myapplication.logic.IConversationData;
 
 /**
  * Created by jacob on 21/11/2015.
