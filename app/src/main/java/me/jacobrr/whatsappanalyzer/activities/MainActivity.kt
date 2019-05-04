@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
                 Log.e("MainActivity", "File not found.")
             }
 
-            CreateDataTask(this, returnUri!!.lastPathSegment).execute(mInputPFD)
+            CreateDataTask(this, returnUri!!.lastPathSegment!!).execute(mInputPFD)
         }
 
     }
@@ -100,10 +100,10 @@ class MainActivity : AppCompatActivity() {
         startActivityForResult(i, 1)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 
         if (resultCode == Activity.RESULT_OK) {
-            val files = Utils.getSelectedFilesFromResult(data)
+            val files = Utils.getSelectedFilesFromResult(data!!)
             val uri = files[0]
             var mInputPFD: ParcelFileDescriptor? = null
             try {
@@ -113,7 +113,7 @@ class MainActivity : AppCompatActivity() {
                 Log.e("MainActivity", "File not found.")
             }
 
-            CreateDataTask(this, uri.lastPathSegment).execute(mInputPFD)
+            CreateDataTask(this, uri.lastPathSegment!!).execute(mInputPFD)
         }
     }
 }
