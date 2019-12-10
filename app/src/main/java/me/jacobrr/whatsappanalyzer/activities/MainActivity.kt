@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
 
         Constants.dbHandler = DataDBHandler(this)
 
-        val sva = SavedDataAdapter(this, Constants.dbHandler.allData)
+        val sva = SavedDataAdapter(this, Constants.dbHandler!!.allData)
         saved_analysis_list.adapter = sva
 
         saved_analysis_list.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, _ ->

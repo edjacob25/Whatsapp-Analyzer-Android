@@ -4,6 +4,7 @@ import java.io.Serializable
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.HashMap
 
 /**
  * Created by jacob on 22/11/2015.
@@ -11,32 +12,38 @@ import java.util.*
  */
 class ConversationDataDB : IConversationData {
     //<Name, <messages, MessageShare, WordsAvg>>
-    private val id: Int
-    private var participants: Map<String, Triplet>? = null
-    private var mostTalkedDay: TupleB? = null
-    private var mostTalkedMonth: TupleA? = null
+    private var id: Int? = null
+    private var participantsMap: Map<String, Triplet> = HashMap()
+    private var mostTalkedDayT: TupleB
+    private var mostTalkedMonthT: TupleA
     override var totalMessages: Int = 0
         private set
+    override val participants: List<String>
+        get() = participantsMap.keys.toList()
+    override val mostTalkedDay: Date
+        get() = mostTalkedDayT.x
     override var totalDaysTalked: Int = 0
         private set
+    override val mostTalkedMonth: String
+        get() = mostTalkedMonthT.x
     override var dailyAvg: Float = 0.toFloat()
         private set
     override var realDailyAvg: Float = 0.toFloat()
         private set
-    override var conversationName: String? = null
+    override var conversationName: String = ""
         private set
 
     val monthDB: String
-        get() = mostTalkedMonth!!.toString()
+        get() = mostTalkedMonth
 
     val dayDB: String
-        get() = mostTalkedDay!!.toString()
+        get() = mostTalkedDay.toString()
 
     val participantsDB: String
         get() {
             var res = ""
-            for (s in participants!!.keys) {
-                res = res + "|" + s + "-" + participants!![s]!!.toString()
+            for (s in participantsMap.keys) {
+                res = res + "|" + s + "-" + participantsMap[s].toString()
             }
             return res
         }
@@ -44,8 +51,8 @@ class ConversationDataDB : IConversationData {
     constructor(id: Int, dailyAvg: Float, mostTalkedDay: String, mostTalkedMonth: String, participants: String, realDailyAvg: Float, totalDaysTalked: Int, totalMessages: Int, conversationName: String) {
         this.id = id
         this.dailyAvg = dailyAvg
-        this.mostTalkedDay = TupleB(mostTalkedDay)
-        this.mostTalkedMonth = TupleA(mostTalkedMonth)
+        this.mostTalkedDayT = TupleB(mostTalkedDay)
+        this.mostTalkedMonthT = TupleA(mostTalkedMonth)
         val a = HashMap<String, Triplet>()
         val parts = participants.split("\\|".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
         for (part in parts) {
@@ -54,7 +61,7 @@ class ConversationDataDB : IConversationData {
                 a[minipart[0]] = Triplet(minipart[1])
             }
         }
-        this.participants = a
+        this.participantsMap = a
         this.conversationName = conversationName
         this.realDailyAvg = realDailyAvg
         this.totalDaysTalked = totalDaysTalked
@@ -62,13 +69,13 @@ class ConversationDataDB : IConversationData {
     }
 
     constructor(cv: IConversationData) {
-        this.mostTalkedDay = TupleB(cv.mostTalkedDay, cv.getDayData(cv.mostTalkedDay))
-        this.mostTalkedMonth = TupleA(cv.mostTalkedMonth, cv.getMonthData(cv.mostTalkedMonth))
+        this.mostTalkedDayT = TupleB(cv.mostTalkedDay, cv.getDayData(cv.mostTalkedDay))
+        this.mostTalkedMonthT = TupleA(cv.mostTalkedMonth, cv.getMonthData(cv.mostTalkedMonth))
         val n = HashMap<String, Triplet>()
         for (s in cv.participants) {
             n[s] = Triplet(cv.getParticipantCount(s), cv.getParticipantShare(s), cv.getWordsAvg(s))
         }
-        this.participants = n
+        this.participantsMap = n
         this.totalMessages = cv.totalMessages
         this.totalDaysTalked = cv.totalDaysTalked
         this.dailyAvg = cv.dailyAvg
@@ -76,36 +83,25 @@ class ConversationDataDB : IConversationData {
         this.conversationName = cv.conversationName
     }
 
-    override fun getParticipants(): List<String> {
-        return ArrayList(participants!!.keys)
-    }
-
     override fun getParticipantCount(pt: String): Int {
-        return participants!![pt]!!.x
+        return participantsMap[pt]!!.x
     }
 
     override fun getParticipantShare(pt: String): Float {
-        return participants!![pt]!!.y
+        return participantsMap[pt]!!.y
     }
 
     override fun getWordsAvg(pt: String): Float {
-        return participants!![pt]!!.z
+        return participantsMap[pt]!!.z
     }
 
-    override fun getMostTalkedMonth(): String {
-        return mostTalkedMonth!!.x
-    }
-
-    override fun getMostTalkedDay(): Date {
-        return mostTalkedDay!!.x
-    }
 
     override fun getMonthData(month: String): Int {
-        return mostTalkedMonth!!.y
+        return mostTalkedMonthT.y
     }
 
     override fun getDayData(date: Date): Int {
-        return mostTalkedDay!!.y
+        return mostTalkedDayT.y
     }
 }
 
@@ -131,22 +127,23 @@ internal class TupleA : Serializable {
 
 internal class TupleB : Serializable {
     var x: Date
-    var y: Int = 0
+    var y: Int
 
     constructor(s: String) {
         val parts = s.split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
         try {
-            this.x = sdf.parse(parts[0])
+            this.x = sdf.parse(parts[0])!!
         } catch (e: ParseException) {
             e.printStackTrace()
+            this.x = Date()
         }
 
         this.y = Integer.parseInt(parts[1])
     }
 
-    constructor(x: Date, y: Int?) {
+    constructor(x: Date, y: Int) {
         this.x = x
-        this.y = y!!
+        this.y = y
     }
 
     override fun toString(): String {

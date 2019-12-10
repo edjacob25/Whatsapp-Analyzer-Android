@@ -27,7 +27,7 @@ class LineAnalyzer {
             val name = textDivision[0].substring(1, textDivision[0].length)
 
             val message = textDivision[1]
-            val date = sdf.parse(dateDivision[0])
+            val date = sdf.parse(dateDivision[0])!!
             val hour = Integer.parseInt(dateDivision[1].split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0])
 
             return AnalyzedLine(name, message, date, getTimeOfTheDay(hour))

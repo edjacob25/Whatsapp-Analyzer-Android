@@ -9,9 +9,23 @@ import java.util.*
 /**
  * Created by jacob on 20/11/2015.s
  */
-class ConversationData(private val conversationName: String) : IConversationData {
-    internal var sdf = SimpleDateFormat("dd/MM/yyyy")
-    private val participants = HashMap<String, Int>()
+class ConversationData(override val conversationName: String) : IConversationData {
+    override val participants: List<String>
+        get() = participantsMap.keys.toList()
+    override val mostTalkedDay: Date
+        get() = days.maxBy { it.value }?.key ?: Date(0)
+    override val totalDaysTalked: Int
+        get() = totalDays.size
+    override val mostTalkedMonth: String
+        get() = months.maxBy { it.value }!!.key
+    override val totalMessages: Int
+        get() = participantsMap.map { it.value }.sum()
+    override val dailyAvg: Float
+        get() = totalMessages.toFloat() / days.size
+    override val realDailyAvg: Float
+        get() = totalMessages.toFloat() / totalDays.size
+    private var sdf = SimpleDateFormat("dd/MM/yyyy")
+    private val participantsMap = HashMap<String, Int>()
     private val participantsWords = HashMap<String, Int>()
     private val messages = HashMap<String, List<String>>()
     private val days = TreeMap<Date, Int>()
@@ -21,8 +35,8 @@ class ConversationData(private val conversationName: String) : IConversationData
     private val personData: MutableList<Person> = ArrayList()
 
     fun addData(participant: String, message: String, date: Date, time: String) {
-        val numMess = participants[participant]
-        participants.put(participant, if (numMess == null) 1 else numMess + 1)
+        val numMess = participantsMap[participant]
+        participantsMap.put(participant, if (numMess == null) 1 else numMess + 1)
 
         val numDay = days[date]
         days.put(date, if (numDay == null) 1 else numDay + 1)
@@ -73,27 +87,11 @@ class ConversationData(private val conversationName: String) : IConversationData
 
     fun createPeopleData() {
         val wa = WordAnalyzer()
-        participants.keys.map { personData.add(wa.analyze(it, messages.getValue(it))) }
+        participantsMap.keys.map { personData.add(wa.analyze(it, messages.getValue(it))) }
     }
 
     fun getPersonData(i: Int): Person {
         return personData[i]
-    }
-
-    override fun getParticipants(): List<String> {
-        return ArrayList(participants.keys)
-    }
-
-    override fun getMostTalkedDay(): Date {
-        return days.maxBy { it.value }?.key ?: Date(0)
-    }
-
-    override fun getMostTalkedMonth(): String {
-        return months.maxBy { it.value }!!.key
-    }
-
-    override fun getConversationName(): String {
-        return conversationName
     }
 
     override fun getDayData(date: Date): Int {
@@ -104,32 +102,16 @@ class ConversationData(private val conversationName: String) : IConversationData
         return months.getValue(month)
     }
 
-    override fun getTotalMessages(): Int {
-        return participants.map { it.value }.sum()
-    }
-
-    override fun getTotalDaysTalked(): Int {
-        return totalDays.size
-    }
-
     override fun getParticipantCount(pt: String): Int {
-        return participants.getValue(pt)
+        return participantsMap.getValue(pt)
     }
 
     override fun getParticipantShare(pt: String): Float {
-        return (participants.getValue(pt) * 100.0).toFloat() / totalMessages
+        return (participantsMap.getValue(pt) * 100.0).toFloat() / totalMessages
     }
 
     override fun getWordsAvg(pt: String): Float {
-        return participantsWords.getValue(pt) / participants.getValue(pt).toFloat()
-    }
-
-    override fun getDailyAvg(): Float {
-        return totalMessages.toFloat() / days.size
-    }
-
-    override fun getRealDailyAvg(): Float {
-        return totalMessages.toFloat() / totalDays.size
+        return participantsWords.getValue(pt) / participantsMap.getValue(pt).toFloat()
     }
 
     val chartDaysData: Pair<LineData, List<String>>

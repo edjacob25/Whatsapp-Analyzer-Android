@@ -15,11 +15,11 @@ class PersonActivity : AppCompatActivity() {
         setContentView(R.layout.activity_person)
 
         Log.i("Persona", Constants.person.toString())
-        person_view_aggressiveness.text = getFormattedString(Constants.person.aggressiveness)
-        person_view_happiness.text = getFormattedString(Constants.person.happiness)
-        person_view_fear.text = getFormattedString(Constants.person.fear)
-        person_view_love.text = getFormattedString(Constants.person.love)
-        person_view_sadness.text = getFormattedString(Constants.person.sadness)
+        person_view_aggressiveness.text = Constants.person?.aggressiveness?.let { getFormattedString(it) }
+        person_view_happiness.text = Constants.person?.happiness?.let { getFormattedString(it) }
+        person_view_fear.text = Constants.person?.fear?.let { getFormattedString(it) }
+        person_view_love.text = Constants.person?.love?.let { getFormattedString(it) }
+        person_view_sadness.text = Constants.person?.sadness?.let { getFormattedString(it) }
     }
 
     private fun getFormattedString(param: Float): String {

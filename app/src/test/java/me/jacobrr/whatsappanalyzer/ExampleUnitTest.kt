@@ -13,6 +13,6 @@ class ExampleUnitTest {
     @Test
     @Throws(Exception::class)
     fun addition_isCorrect() {
-        assertEquals("afternoon", LineAnalyzer().getTimeOfTheDay(12))
+        assertEquals("Afternoon", LineAnalyzer().getTimeOfTheDay(12))
     }
 }

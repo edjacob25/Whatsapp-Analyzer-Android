@@ -55,12 +55,11 @@ class SavedDataAdapter(context: Context, c: Cursor) : BaseAdapter() {
     }
 
     override fun getView(position: Int, convertView: View, parent: ViewGroup): View {
-        var convertView = convertView
-        convertView = inflater.inflate(R.layout.conversation_list_item, null)
-        val conversationName = convertView.findViewById<TextView>(R.id.conversation_item_name)
+        val view = inflater.inflate(R.layout.conversation_list_item, null)
+        val conversationName = view.findViewById<TextView>(R.id.conversation_item_name)
         conversationName.text = conversations[position].conversationName
-        val conversationMessages = convertView.findViewById<TextView>(R.id.conversation_item_msg)
+        val conversationMessages = view.findViewById<TextView>(R.id.conversation_item_msg)
         conversationMessages.text = parent.resources.getString(R.string.messages, conversations[position].totalMessages)
-        return convertView
+        return view
     }
 }

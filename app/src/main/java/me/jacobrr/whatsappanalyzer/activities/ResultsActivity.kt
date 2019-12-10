@@ -93,7 +93,7 @@ class ResultsActivity : AppCompatActivity() {
 
     private fun saveDB() {
         Toast.makeText(this, "Saving", Toast.LENGTH_LONG).show()
-        Constants.dbHandler.insert(ConversationDataDB(Constants.conversationData))
+        Constants.dbHandler?.insert(ConversationDataDB(Constants.conversationData))
     }
 
     /**

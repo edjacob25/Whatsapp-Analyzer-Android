@@ -12,11 +12,8 @@ import me.jacobrr.whatsappanalyzer.logic.IConversationData
  * Created by jacob on 21/11/2015.
  */
 class PeopleListAdapter(context: Context, private val cv: IConversationData) : BaseAdapter() {
-    private val inflater: LayoutInflater
 
-    init {
-        inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-    }
+    private val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
     override fun getCount(): Int {
         return cv.participants.size
@@ -30,18 +27,17 @@ class PeopleListAdapter(context: Context, private val cv: IConversationData) : B
         return position.toLong()
     }
 
-    override fun getView(position: Int, convertView: View, parent: ViewGroup): View {
-        var convertView = convertView
-        convertView = inflater.inflate(R.layout.people_list_item, null)
-        val tName = convertView.findViewById<TextView>(R.id.people_name)
-        val tPercentage = convertView.findViewById<TextView>(R.id.people_percentage)
-        val tWords = convertView.findViewById<TextView>(R.id.words_per_message)
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+        val view= inflater.inflate(R.layout.people_list_item, null)
+        val tName = view.findViewById<TextView>(R.id.people_name)
+        val tPercentage = view.findViewById<TextView>(R.id.people_percentage)
+        val tWords = view.findViewById<TextView>(R.id.words_per_message)
         val name = cv.participants[position]
         tName.text = name
         val percentage = String.format("%.2f%%", cv.getParticipantShare(name))
         tPercentage.text = percentage
         tWords.text = String.format("%.2f", cv.getWordsAvg(name))
 
-        return convertView
+        return view
     }
 }
