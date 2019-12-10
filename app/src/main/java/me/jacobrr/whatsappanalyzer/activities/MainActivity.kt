@@ -5,26 +5,24 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Environment
 import android.os.ParcelFileDescriptor
-import android.provider.SyncStateContract
-import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
-import me.jacobrr.whatsappanalyzer.Constants
-import me.jacobrr.whatsappanalyzer.R
-import me.jacobrr.whatsappanalyzer.activities.MyPickerActivity
-import me.jacobrr.whatsappanalyzer.activities.ResultsActivity
-import me.jacobrr.whatsappanalyzer.db.DataDBHandler
-import me.jacobrr.whatsappanalyzer.db.SavedDataAdapter
-import me.jacobrr.whatsappanalyzer.logic.IConversationData
-import me.jacobrr.whatsappanalyzer.tasks.CreateDataTask
+import androidx.appcompat.app.AppCompatActivity
 import com.nononsenseapps.filepicker.FilePickerActivity
 import com.nononsenseapps.filepicker.Utils
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
+import me.jacobrr.whatsappanalyzer.Constants
+import me.jacobrr.whatsappanalyzer.R
+import me.jacobrr.whatsappanalyzer.db.DataDBHandler
+import me.jacobrr.whatsappanalyzer.db.SavedDataAdapter
+import me.jacobrr.whatsappanalyzer.logic.IConversationData
+import me.jacobrr.whatsappanalyzer.tasks.CreateDataTask
 import java.io.FileNotFoundException
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -82,8 +80,6 @@ class MainActivity : AppCompatActivity() {
         val context = applicationContext
         // This always works
         val i = Intent(context, MyPickerActivity::class.java)
-        // This works if you defined the intent filter
-        // Intent i = new Intent(Intent.ACTION_GET_CONTENT);
 
         // Set these depending on your use case. These are the defaults.
         i.putExtra(FilePickerActivity.EXTRA_ALLOW_MULTIPLE, false)
@@ -102,6 +98,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 
+        super.onActivityResult(requestCode,resultCode,data)
+
         if (resultCode == Activity.RESULT_OK) {
             val files = Utils.getSelectedFilesFromResult(data!!)
             val uri = files[0]
@@ -112,6 +110,7 @@ class MainActivity : AppCompatActivity() {
                 e.printStackTrace()
                 Log.e("MainActivity", "File not found.")
             }
+
 
             CreateDataTask(this, uri.lastPathSegment!!).execute(mInputPFD)
         }

@@ -1,8 +1,8 @@
 package me.jacobrr.whatsappanalyzer.activities
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import me.jacobrr.whatsappanalyzer.Constants
 import me.jacobrr.whatsappanalyzer.R
 import kotlinx.android.synthetic.main.activity_person.*
