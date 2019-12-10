@@ -1,4 +1,5 @@
 package me.jacobrr.whatsappanalyzer.logic
+
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.*
 import me.jacobrr.whatsappanalyzer.analysis.Person
@@ -10,21 +11,6 @@ import java.util.*
  * Created by jacob on 20/11/2015.s
  */
 class ConversationData(override val conversationName: String) : IConversationData {
-    override val participants: List<String>
-        get() = participantsMap.keys.toList()
-    override val mostTalkedDay: Date
-        get() = days.maxBy { it.value }?.key ?: Date(0)
-    override val totalDaysTalked: Int
-        get() = totalDays.size
-    override val mostTalkedMonth: String
-        get() = months.maxBy { it.value }!!.key
-    override val totalMessages: Int
-        get() = participantsMap.map { it.value }.sum()
-    override val dailyAvg: Float
-        get() = totalMessages.toFloat() / days.size
-    override val realDailyAvg: Float
-        get() = totalMessages.toFloat() / totalDays.size
-    private var sdf = SimpleDateFormat("dd/MM/yyyy")
     private val participantsMap = HashMap<String, Int>()
     private val participantsWords = HashMap<String, Int>()
     private val messages = HashMap<String, List<String>>()
@@ -33,6 +19,15 @@ class ConversationData(override val conversationName: String) : IConversationDat
     private val months = HashMap<String, Int>()
     private val timeofDay = HashMap<String, Int>()
     private val personData: MutableList<Person> = ArrayList()
+
+    override val participants: List<String> = participantsMap.keys.toList()
+    override val mostTalkedDay: Date = days.maxBy { it.value }?.key ?: Date(0)
+    override val totalDaysTalked: Int = totalDays.size
+    override val mostTalkedMonth: String = months.maxBy { it.value }!!.key
+    override val totalMessages: Int = participantsMap.map { it.value }.sum()
+    override val dailyAvg: Float = totalMessages.toFloat() / days.size
+    override val realDailyAvg: Float = totalMessages.toFloat() / totalDays.size
+    private var sdf = SimpleDateFormat("dd/MM/yyyy")
 
     fun addData(participant: String, message: String, date: Date, time: String) {
         val numMess = participantsMap[participant]
@@ -63,7 +58,6 @@ class ConversationData(override val conversationName: String) : IConversationDat
         if (a != null) {
             addData(a.participant, a.message, a.date, a.hours)
         }
-
     }
 
     fun createMonthsData() {
@@ -146,14 +140,6 @@ class ConversationData(override val conversationName: String) : IConversationDat
             dt.axisDependency = YAxis.AxisDependency.LEFT
             return Pair(LineData(dt), axis)
         }
-    /*
-    public List<PieChart.Data> getChartParticipantsData(){
-        List<PieChart.Data> data = new ArrayList<>();
-        for (String s : participants.keySet()) {
-            data.add(new PieChart.Data(s, getParticipantShare(s)));
-        }
-        return data;
-    }*/
 
     val timeChartData: PieData
         get() {
@@ -167,23 +153,4 @@ class ConversationData(override val conversationName: String) : IConversationDat
             dt.axisDependency = YAxis.AxisDependency.LEFT
             return PieData(dt)
         }
-    /*
-    public Dataset getDaysDataSet() {
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-        for (Date iterator : days.keySet()) {
-            dataset.addValue(days.get(iterator), "Mensajes por dia", sdf.format(iterator));
-        }
-        return dataset;
-    }
-
-    public Dataset getTotalDaysDataSet() {
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-
-        for (Date iterator : totalDays.keySet()) {
-            dataset.addValue(totalDays.get(iterator),"Mensajes por dia",sdf.format(iterator));
-        }
-        return dataset;
-    }*/
 }

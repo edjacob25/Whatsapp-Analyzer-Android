@@ -3,21 +3,13 @@ package me.jacobrr.whatsappanalyzer.activities
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
-import androidx.viewpager.widget.ViewPager
 import android.util.TypedValue
 import android.view.*
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import me.jacobrr.whatsappanalyzer.Constants
-import me.jacobrr.whatsappanalyzer.PeopleListAdapter
-import me.jacobrr.whatsappanalyzer.R
-import me.jacobrr.whatsappanalyzer.logic.ConversationData
-import me.jacobrr.whatsappanalyzer.logic.ConversationDataDB
-import me.jacobrr.whatsappanalyzer.tasks.AnalyzePeopleTask
-import me.jacobrr.whatsappanalyzer.tasks.ShareScreenshotTask
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.components.XAxis
@@ -29,6 +21,13 @@ import kotlinx.android.synthetic.main.days_results.view.*
 import kotlinx.android.synthetic.main.general_data_results.view.*
 import kotlinx.android.synthetic.main.hours_results.view.*
 import kotlinx.android.synthetic.main.participants_data_results.view.*
+import me.jacobrr.whatsappanalyzer.Constants
+import me.jacobrr.whatsappanalyzer.PeopleListAdapter
+import me.jacobrr.whatsappanalyzer.R
+import me.jacobrr.whatsappanalyzer.logic.ConversationData
+import me.jacobrr.whatsappanalyzer.logic.ConversationDataDB
+import me.jacobrr.whatsappanalyzer.tasks.AnalyzePeopleTask
+import me.jacobrr.whatsappanalyzer.tasks.ShareScreenshotTask
 
 class ResultsActivity : AppCompatActivity() {
 

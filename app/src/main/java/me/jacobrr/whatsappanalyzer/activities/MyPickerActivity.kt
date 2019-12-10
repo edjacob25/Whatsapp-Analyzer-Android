@@ -1,9 +1,8 @@
 package me.jacobrr.whatsappanalyzer.activities
 
-import me.jacobrr.whatsappanalyzer.FilteredFilePicker
 import com.nononsenseapps.filepicker.AbstractFilePickerActivity
 import com.nononsenseapps.filepicker.AbstractFilePickerFragment
-
+import me.jacobrr.whatsappanalyzer.FilteredFilePicker
 import java.io.File
 
 class MyPickerActivity : AbstractFilePickerActivity<File>() {

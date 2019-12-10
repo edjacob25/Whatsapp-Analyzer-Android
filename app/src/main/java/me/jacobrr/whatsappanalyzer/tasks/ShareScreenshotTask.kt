@@ -10,9 +10,9 @@ import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import androidx.core.view.drawToBitmap
-import java.io.*
-
-import java.util.Date
+import java.io.FileNotFoundException
+import java.io.IOException
+import java.util.*
 
 /**
  * Created by jacob on 24/11/2015.
@@ -46,7 +46,7 @@ class ShareScreenshotTask(private val myAct: Activity) : AsyncTask<Void, Void, U
         val uri = resolver.insert(imageCollection, imageData)
 
         try {
-            resolver.openOutputStream(uri!!).use {out ->
+            resolver.openOutputStream(uri!!).use { out ->
                 myBitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
             }
 

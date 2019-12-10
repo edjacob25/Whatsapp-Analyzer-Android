@@ -18,8 +18,7 @@ class ConversationDataDB : IConversationData {
     private var mostTalkedMonthT: TupleA
     override var totalMessages: Int = 0
         private set
-    override val participants: List<String>
-        get() = participantsMap.keys.toList()
+    override val participants: List<String> = participantsMap.keys.toList()
     override val mostTalkedDay: Date
         get() = mostTalkedDayT.x
     override var totalDaysTalked: Int = 0

@@ -28,7 +28,7 @@ class PeopleListAdapter(context: Context, private val cv: IConversationData) : B
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val view= inflater.inflate(R.layout.people_list_item, null)
+        val view = inflater.inflate(R.layout.people_list_item, null)
         val tName = view.findViewById<TextView>(R.id.people_name)
         val tPercentage = view.findViewById<TextView>(R.id.people_percentage)
         val tWords = view.findViewById<TextView>(R.id.words_per_message)

@@ -9,8 +9,7 @@ import android.widget.BaseAdapter
 import android.widget.TextView
 import me.jacobrr.whatsappanalyzer.R
 import me.jacobrr.whatsappanalyzer.logic.ConversationDataDB
-
-import java.util.ArrayList
+import java.util.*
 
 /**
  * Created by jacob on 19/11/15.

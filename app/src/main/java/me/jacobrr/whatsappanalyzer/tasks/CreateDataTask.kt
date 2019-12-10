@@ -10,8 +10,10 @@ import me.jacobrr.whatsappanalyzer.R
 import me.jacobrr.whatsappanalyzer.activities.ResultsActivity
 import me.jacobrr.whatsappanalyzer.logic.ConversationData
 import me.jacobrr.whatsappanalyzer.logic.LineAnalyzer
-
-import java.io.*
+import java.io.BufferedReader
+import java.io.FileInputStream
+import java.io.IOException
+import java.io.InputStreamReader
 
 /**
  * Created by jacob on 21/11/2015.
