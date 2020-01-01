@@ -1,5 +1,6 @@
 package me.jacobrr.whatsappanalyzer.logic
 
+import java.time.LocalDate
 import java.util.*
 
 /**
@@ -8,7 +9,7 @@ import java.util.*
 interface IConversationData {
     val participants: List<String>
 
-    val mostTalkedDay: Date
+    val mostTalkedDay: LocalDate
 
     val totalDaysTalked: Int
 
@@ -28,7 +29,7 @@ interface IConversationData {
 
     fun getWordsAvg(pt: String): Float
 
-    fun getDayData(date: Date): Int
+    fun getDayData(date: LocalDate): Int
 
     fun getMonthData(month: String): Int
 }

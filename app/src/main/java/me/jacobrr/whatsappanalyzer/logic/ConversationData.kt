@@ -4,7 +4,11 @@ import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.*
 import me.jacobrr.whatsappanalyzer.analysis.Person
 import me.jacobrr.whatsappanalyzer.analysis.WordAnalyzer
-import java.text.SimpleDateFormat
+import java.text.DateFormat
+import java.text.DateFormat.getDateInstance
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 /**
@@ -14,22 +18,31 @@ class ConversationData(override val conversationName: String) : IConversationDat
     private val participantsMap = HashMap<String, Int>()
     private val participantsWords = HashMap<String, Int>()
     private val messages = HashMap<String, List<String>>()
-    private val days = TreeMap<Date, Int>()
-    private val totalDays = TreeMap<Date, Int>()
+    private val days = TreeMap<LocalDate, Int>()
+    private val totalDays = TreeMap<LocalDate, Int>()
     private val months = HashMap<String, Int>()
     private val timeofDay = HashMap<String, Int>()
     private val personData: MutableList<Person> = ArrayList()
 
-    override val participants: List<String> = participantsMap.keys.toList()
-    override val mostTalkedDay: Date = days.maxBy { it.value }?.key ?: Date(0)
-    override val totalDaysTalked: Int = totalDays.size
-    override val mostTalkedMonth: String = months.maxBy { it.value }!!.key
-    override val totalMessages: Int = participantsMap.map { it.value }.sum()
-    override val dailyAvg: Float = totalMessages.toFloat() / days.size
-    override val realDailyAvg: Float = totalMessages.toFloat() / totalDays.size
-    private var sdf = SimpleDateFormat("dd/MM/yyyy")
+    override val participants: List<String>
+            get() = participantsMap.keys.toList()
+    override val mostTalkedDay: LocalDate
+            get() = days.maxBy { it.value }!!.key
+    override val totalDaysTalked: Int
+            get() = totalDays.size
+    override val mostTalkedMonth: String
+            get() = months.maxBy { it.value }!!.key
+    override val totalMessages: Int
+            get() = participantsMap.map { it.value }.sum()
+    override val dailyAvg: Float
+            get() = totalMessages.toFloat() / days.size
+    override val realDailyAvg: Float
+            get() = totalMessages.toFloat() / totalDays.size
 
-    fun addData(participant: String, message: String, date: Date, time: String) {
+    private val dateFormatter = getDateInstance(DateFormat.SHORT)
+    private val monthFormatter = DateTimeFormatter.ofPattern("MM/yyyy")
+
+    fun addData(participant: String, message: String, date: LocalDate, time: String) {
         val numMess = participantsMap[participant]
         participantsMap.put(participant, if (numMess == null) 1 else numMess + 1)
 
@@ -61,21 +74,17 @@ class ConversationData(override val conversationName: String) : IConversationDat
     }
 
     fun createMonthsData() {
-        val sdf = SimpleDateFormat("MM/yyyy")
         for (iterator in days.keys) {
-            months.merge(sdf.format(iterator), days.getValue(iterator)) { currentValue, daysValue -> currentValue + daysValue }
+            months.merge(monthFormatter.format(iterator), days.getValue(iterator)) { currentValue, daysValue -> currentValue + daysValue }
         }
     }
 
     fun createTotalDaysData() {
-        var iterator = Date(days.firstKey().time)
-        val last = Date(System.currentTimeMillis())
-        val calendar = Calendar.getInstance()
-        calendar.time = iterator
-        while (iterator.before(last)) {
-            iterator = calendar.time
-            totalDays.put(iterator, if (days.containsKey(iterator)) days.getValue(iterator) else 0)
-            calendar.add(Calendar.DAY_OF_YEAR, 1)
+        var iterator = days.firstKey()
+        val now = LocalDate.now()
+        while (iterator.isBefore(now)) {
+            iterator = iterator.plusDays(1)
+            totalDays[iterator] = if (days.containsKey(iterator)) days.getValue(iterator) else 0
         }
     }
 
@@ -88,7 +97,7 @@ class ConversationData(override val conversationName: String) : IConversationDat
         return personData[i]
     }
 
-    override fun getDayData(date: Date): Int {
+    override fun getDayData(date: LocalDate): Int {
         return days.getValue(date)
     }
 
@@ -117,11 +126,11 @@ class ConversationData(override val conversationName: String) : IConversationDat
 
             days.map {
                 vals.add(Entry(i++.toFloat(), it.value.toFloat()))
-                axis.add(sdf.format(it.key))
+                val instant = it.key.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()
+                axis.add(dateFormatter.format(Date.from(instant)))
             }
 
             val dt = LineDataSet(vals, "Messages")
-            //dt.axisDependency = YAxis.AxisDependency.LEFT
             return Pair(LineData(dt), axis)
         }
 
@@ -133,7 +142,8 @@ class ConversationData(override val conversationName: String) : IConversationDat
 
             totalDays.map {
                 vals.add(Entry((i++).toFloat(), it.value.toFloat()))
-                axis.add(sdf.format(it.key))
+                val instant = it.key.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()
+                axis.add(dateFormatter.format(Date.from(instant)))
             }
             val dt = LineDataSet(vals, "Messages")
 

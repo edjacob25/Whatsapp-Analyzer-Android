@@ -1,8 +1,12 @@
 package me.jacobrr.whatsappanalyzer.logic
 
 import java.io.Serializable
+import java.text.DateFormat
+import java.text.DateFormat.getDateInstance
 import java.text.ParseException
-import java.text.SimpleDateFormat
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -19,7 +23,7 @@ class ConversationDataDB : IConversationData {
     override var totalMessages: Int = 0
         private set
     override val participants: List<String> = participantsMap.keys.toList()
-    override val mostTalkedDay: Date
+    override val mostTalkedDay: LocalDate
         get() = mostTalkedDayT.x
     override var totalDaysTalked: Int = 0
         private set
@@ -99,7 +103,7 @@ class ConversationDataDB : IConversationData {
         return mostTalkedMonthT.y
     }
 
-    override fun getDayData(date: Date): Int {
+    override fun getDayData(date: LocalDate): Int {
         return mostTalkedDayT.y
     }
 }
@@ -125,32 +129,32 @@ internal class TupleA : Serializable {
 }
 
 internal class TupleB : Serializable {
-    var x: Date
+    var x: LocalDate
     var y: Int
 
     constructor(s: String) {
         val parts = s.split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
         try {
-            this.x = sdf.parse(parts[0])!!
+            this.x = Instant.ofEpochMilli(sdf.parse(parts[0])!!.time).atZone(ZoneId.systemDefault()).toLocalDate()
         } catch (e: ParseException) {
             e.printStackTrace()
-            this.x = Date()
+            this.x = LocalDate.now()
         }
 
         this.y = Integer.parseInt(parts[1])
     }
 
-    constructor(x: Date, y: Int) {
+    constructor(x: LocalDate, y: Int) {
         this.x = x
         this.y = y
     }
 
     override fun toString(): String {
-        return sdf.format(x) + "," + y
+        return "${sdf.format(Date.from(x.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()))}, $y"
     }
 
     companion object {
-        var sdf = SimpleDateFormat("dd/MM/yyyy")
+        var sdf = getDateInstance(DateFormat.SHORT)
     }
 }
 
