@@ -9,7 +9,7 @@ import me.jacobrr.whatsappanalyzer.logic.ConversationDataDB
  * Created by jacob on 22/11/2015.
  */
 class DataDBHandler(context: Context) {
-    internal var dbHelper: DataReaderHelper
+    private var dbHelper: DataReaderHelper = DataReaderHelper(context)
 
     val allData: Cursor
         get() {
@@ -28,10 +28,6 @@ class DataDBHandler(context: Context) {
             c.moveToFirst()
             return c
         }
-
-    init {
-        dbHelper = DataReaderHelper(context)
-    }
 
     fun insert(cv: ConversationDataDB): Long {
         val db = dbHelper.writableDatabase

@@ -9,29 +9,29 @@ class DataReaderContract {
 
     abstract class DataEntry : BaseColumns {
         companion object {
-            val TABLE_NAME = "analysis"
-            val COLUMN_NAME_ID = "_id"
-            val COLUMN_NAME_NAME = "conversationName"
-            val COLUMN_NULLABLE = "conversationName"
-            val COLUMN_NAME_DAILY_AVG = "dailyAvg"
-            val COLUMN_NAME_REAL_DAILY_AVG = "realDailyAvg"
-            val COLUMN_NAME_MOST_TDAY = "mostTalkedDay"
-            val COLUMN_NAME_MOST_TMON = "mostTalkedMonth"
-            val COLUMN_NAME_PARTICIPANTS = "participants"
-            val COLUMN_NAME_TOTAL_MSGS = "totalMessages"
-            val COLUMN_NAME_TOTAL_DAYS = "totalDays"
+            const val TABLE_NAME = "analysis"
+            const val COLUMN_NAME_ID = "_id"
+            const val COLUMN_NAME_NAME = "conversationName"
+            const val COLUMN_NULLABLE = "conversationName"
+            const val COLUMN_NAME_DAILY_AVG = "dailyAvg"
+            const val COLUMN_NAME_REAL_DAILY_AVG = "realDailyAvg"
+            const val COLUMN_NAME_MOST_TDAY = "mostTalkedDay"
+            const val COLUMN_NAME_MOST_TMON = "mostTalkedMonth"
+            const val COLUMN_NAME_PARTICIPANTS = "participants"
+            const val COLUMN_NAME_TOTAL_MSGS = "totalMessages"
+            const val COLUMN_NAME_TOTAL_DAYS = "totalDays"
         }
 
     }
 
     companion object {
-        val DATABASE_VERSION = 2
-        val DATABASE_NAME = "SavedAnalysis.db"
-        private val TEXT_TYPE = " TEXT"
-        private val BLOB_TYPE = " BLOB"
-        private val COMMA_SEP = ","
+        const val DATABASE_VERSION = 2
+        const val DATABASE_NAME = "SavedAnalysis.db"
+        private const val TEXT_TYPE = " TEXT"
+        private const val BLOB_TYPE = " BLOB"
+        private const val COMMA_SEP = ","
 
-        val SQL_CREATE_ENTRIES = "CREATE TABLE " + DataEntry.TABLE_NAME + " (" +
+        const val SQL_CREATE_ENTRIES = "CREATE TABLE " + DataEntry.TABLE_NAME + " (" +
                 DataEntry.COLUMN_NAME_ID + " INTEGER PRIMARY KEY," +
                 DataEntry.COLUMN_NAME_NAME + TEXT_TYPE + COMMA_SEP +
                 DataEntry.COLUMN_NAME_DAILY_AVG + TEXT_TYPE + COMMA_SEP +
@@ -42,6 +42,6 @@ class DataReaderContract {
                 DataEntry.COLUMN_NAME_TOTAL_MSGS + TEXT_TYPE + COMMA_SEP +
                 DataEntry.COLUMN_NAME_TOTAL_DAYS + TEXT_TYPE + ")"
 
-        val SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS " + DataEntry.TABLE_NAME
+        const val SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS " + DataEntry.TABLE_NAME
     }
 }
