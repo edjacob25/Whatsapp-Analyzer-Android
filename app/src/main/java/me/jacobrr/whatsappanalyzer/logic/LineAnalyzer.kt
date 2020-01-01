@@ -3,8 +3,9 @@ package me.jacobrr.whatsappanalyzer.logic
 import java.text.DateFormat
 import java.text.DateFormat.getDateInstance
 import java.text.DateFormat.getTimeInstance
-import java.time.*
-
+import java.time.Instant
+import java.time.LocalTime
+import java.time.ZoneId
 
 
 /**
@@ -42,5 +43,5 @@ class LineAnalyzer {
         }
     }
 
-    class MatchExpection: Exception("Line does not match regex, is a continuation of the last message")
+    class MatchExpection : Exception("Line does not match regex, is a continuation of the last message")
 }

@@ -60,7 +60,7 @@ class ConversationDataDB : IConversationData {
         val parts = participants.split("\\|".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
         for (part in parts) {
             if (part != "") {
-                val minipart = part.split("\\-".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+                val minipart = part.split("-".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
                 a[minipart[0]] = Triplet(minipart[1])
             }
         }
@@ -154,7 +154,7 @@ internal class TupleB : Serializable {
     }
 
     companion object {
-        var sdf = getDateInstance(DateFormat.SHORT)
+        val sdf = getDateInstance(DateFormat.SHORT)
     }
 }
 

@@ -1,7 +1,6 @@
 package me.jacobrr.whatsappanalyzer.logic
 
 import java.time.LocalDate
-import java.util.*
 
 /**
  * Created by jacob on 22/11/2015.

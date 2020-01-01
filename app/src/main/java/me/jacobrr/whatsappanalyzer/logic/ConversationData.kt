@@ -25,46 +25,40 @@ class ConversationData(override val conversationName: String) : IConversationDat
     private val personData: MutableList<Person> = ArrayList()
 
     override val participants: List<String>
-            get() = participantsMap.keys.toList()
+        get() = participantsMap.keys.toList()
     override val mostTalkedDay: LocalDate
-            get() = days.maxBy { it.value }!!.key
+        get() = days.maxBy { it.value }!!.key
     override val totalDaysTalked: Int
-            get() = totalDays.size
+        get() = totalDays.size
     override val mostTalkedMonth: String
-            get() = months.maxBy { it.value }!!.key
+        get() = months.maxBy { it.value }!!.key
     override val totalMessages: Int
-            get() = participantsMap.map { it.value }.sum()
+        get() = participantsMap.map { it.value }.sum()
     override val dailyAvg: Float
-            get() = totalMessages.toFloat() / days.size
+        get() = totalMessages.toFloat() / days.size
     override val realDailyAvg: Float
-            get() = totalMessages.toFloat() / totalDays.size
+        get() = totalMessages.toFloat() / totalDays.size
 
     private val dateFormatter = getDateInstance(DateFormat.SHORT)
     private val monthFormatter = DateTimeFormatter.ofPattern("MM/yyyy")
 
     fun addData(participant: String, message: String, date: LocalDate, time: String) {
-        val numMess = participantsMap[participant]
-        participantsMap.put(participant, if (numMess == null) 1 else numMess + 1)
+        val numMess = participantsMap[participant] ?: 0
+        participantsMap[participant] = numMess + 1
 
-        val numDay = days[date]
-        days.put(date, if (numDay == null) 1 else numDay + 1)
+        val numDay = days[date] ?: 0
+        days[date] = numDay + 1
 
-        /* -1 added for the first space at the start */
-        val wordsAcc = participantsWords[participant]
-        val words = message.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray().size - 1
-        participantsWords.put(participant, if (wordsAcc == null) words else wordsAcc + words)
+        val wordsAcc = participantsWords[participant] ?: 0
+        val words = message.split(" ").dropLastWhile { it.isEmpty() }.size
+        participantsWords[participant] = wordsAcc + words
 
-        /*if (!message.equals(" <Archivo omitido>"))
-            messages.add(message);*/
+        val timeCount = timeofDay[time] ?: 0
+        timeofDay[time] = timeCount + 1
 
-        val timeCount = timeofDay[time]
-        timeofDay.put(time, if (timeCount == null) 1 else timeCount + 1)
-
-        var msgsList: ArrayList<String>? = messages[participant] as ArrayList<String>?
-        if (msgsList == null)
-            msgsList = ArrayList<String>()
+        val msgsList = messages[participant]?.toMutableList() ?: mutableListOf()
         msgsList.add(message)
-        messages.put(participant, msgsList)
+        messages[participant] = msgsList
     }
 
     fun addData(a: AnalyzedLine?) {
