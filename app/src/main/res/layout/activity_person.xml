@@ -23,14 +23,14 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="Happiness:"
-            android:gravity="center"/>
+            android:gravity="center" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:id="@+id/person_view_happiness"/>
+            android:id="@+id/person_view_happiness" />
     </LinearLayout>
 
     <LinearLayout
@@ -45,14 +45,14 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="Sadness:"
-            android:gravity="center"/>
+            android:gravity="center" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:id="@+id/person_view_sadness"/>
+            android:id="@+id/person_view_sadness" />
     </LinearLayout>
 
     <LinearLayout
@@ -67,14 +67,14 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="Aggressiveness:"
-            android:gravity="center"/>
+            android:gravity="center" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:id="@+id/person_view_aggressiveness"/>
+            android:id="@+id/person_view_aggressiveness" />
     </LinearLayout>
 
     <LinearLayout
@@ -89,14 +89,14 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="Fear:"
-            android:gravity="center"/>
+            android:gravity="center" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:id="@+id/person_view_fear"/>
+            android:id="@+id/person_view_fear" />
     </LinearLayout>
 
     <LinearLayout
@@ -111,14 +111,14 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="Love:"
-            android:gravity="center"/>
+            android:gravity="center" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:id="@+id/person_view_love"/>
+            android:id="@+id/person_view_love" />
     </LinearLayout>
 
 </LinearLayout>

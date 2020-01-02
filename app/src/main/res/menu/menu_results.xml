@@ -1,21 +1,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".activities.ResultsActivity"
-    >
+    tools:context=".activities.ResultsActivity">
 
     <item
         android:id="@+id/menu_save"
         android:orderInCategory="100"
         android:title="@string/save"
-        app:showAsAction="ifRoom"
-        />
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/menu_item_share"
         android:orderInCategory="100"
         android:title="@string/action_share"
         android:icon="@drawable/ic_menu_share"
-        app:showAsAction="ifRoom"
-        />
+        app:showAsAction="ifRoom" />
 </menu>
