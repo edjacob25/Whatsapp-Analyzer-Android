@@ -9,8 +9,8 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.AdapterView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.nononsenseapps.filepicker.FilePickerActivity
 import com.nononsenseapps.filepicker.Utils
 import kotlinx.android.synthetic.main.activity_main.*
@@ -19,7 +19,6 @@ import me.jacobrr.whatsappanalyzer.Constants
 import me.jacobrr.whatsappanalyzer.R
 import me.jacobrr.whatsappanalyzer.db.DataDBHandler
 import me.jacobrr.whatsappanalyzer.db.SavedDataAdapter
-import me.jacobrr.whatsappanalyzer.logic.IConversationData
 import me.jacobrr.whatsappanalyzer.tasks.CreateDataTask
 import java.io.FileNotFoundException
 
@@ -33,13 +32,12 @@ class MainActivity : AppCompatActivity() {
 
         Constants.dbHandler = DataDBHandler(this)
 
-        val sva = SavedDataAdapter(this, Constants.dbHandler!!.allData)
-        saved_analysis_list.adapter = sva
-
-        saved_analysis_list.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, _ ->
-            Constants.conversationData = parent.getItemAtPosition(position) as IConversationData
-            val intent = Intent(view.context, ResultsActivity::class.java)
-            startActivity(intent)
+        val sva = SavedDataAdapter(Constants.dbHandler!!.allData)
+        val viewManager = LinearLayoutManager(applicationContext)
+        saved_analysis_list.apply {
+            setHasFixedSize(true)
+            layoutManager = viewManager
+            adapter = sva
         }
 
         if (intent.action == Intent.ACTION_VIEW) {

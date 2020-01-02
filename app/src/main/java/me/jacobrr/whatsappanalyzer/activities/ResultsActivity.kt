@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.components.XAxis
@@ -131,8 +132,14 @@ class ResultsActivity : AppCompatActivity() {
         }
 
         private fun createParticipantsView(rootView: View) {
-            val peopleListAdapter = PeopleListAdapter(rootView.context, Constants.conversationData)
-            rootView.people_list.adapter = peopleListAdapter
+            val viewManager = LinearLayoutManager(context)
+            val peopleListAdapter = PeopleListAdapter(Constants.conversationData)
+
+            rootView.people_list.apply {
+                setHasFixedSize(true)
+                layoutManager = viewManager
+                adapter = peopleListAdapter
+            }
         }
 
         private fun createDaysView(rootView: View) {

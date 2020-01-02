@@ -1,15 +1,13 @@
 package me.jacobrr.whatsappanalyzer.tasks
 
 import android.app.Activity
-import android.content.Intent
 import android.os.AsyncTask
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ListView
 import android.widget.Toast
+import androidx.recyclerview.widget.RecyclerView
 import me.jacobrr.whatsappanalyzer.Constants
+import me.jacobrr.whatsappanalyzer.PeopleListAdapter
 import me.jacobrr.whatsappanalyzer.R
-import me.jacobrr.whatsappanalyzer.activities.PersonActivity
 import me.jacobrr.whatsappanalyzer.logic.ConversationData
 
 /**
@@ -24,14 +22,9 @@ class AnalyzePeopleTask(private val myAct: Activity) : AsyncTask<Void, Void, Voi
 
     override fun onPostExecute(aVoid: Void?) {
         super.onPostExecute(aVoid)
-        val l = myAct.findViewById<View>(R.id.people_list) as ListView
-        l.onItemClickListener = AdapterView.OnItemClickListener { _, view, position, _ ->
-            //Toast.makeText(view.getContext(), "item", Toast.LENGTH_SHORT).show();
-
-            Constants.person = (Constants.conversationData as ConversationData).getPersonData(position)
-            val intent = Intent(view.context, PersonActivity::class.java)
-            myAct.startActivity(intent)
-        }
+        val l = myAct.findViewById<View>(R.id.people_list) as RecyclerView
+        val adapter = l.adapter as PeopleListAdapter
+        adapter.ready = true
         Toast.makeText(myAct, "Done", Toast.LENGTH_SHORT).show()
     }
 }
