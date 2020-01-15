@@ -36,12 +36,18 @@ class ShareScreenshotTask(private val myAct: Activity) : AsyncTask<Void, Void, U
 
         val resolver = myAct.applicationContext.contentResolver
 
-        val imageCollection = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)
+        val imageCollection = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q)
+            MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)
+        else
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+
         val imageData = ContentValues().apply {
             put(MediaStore.Images.Media.DISPLAY_NAME, "$name")
             put(MediaStore.Images.Media.MIME_TYPE, "image/png")
-            put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/Screenshots/")
-            put(MediaStore.Images.Media.IS_PENDING, 1)
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/Screenshots/")
+                put(MediaStore.Images.Media.IS_PENDING, 1)
+            }
         }
         val uri = resolver.insert(imageCollection, imageData)
 
@@ -51,7 +57,9 @@ class ShareScreenshotTask(private val myAct: Activity) : AsyncTask<Void, Void, U
             }
 
             imageData.clear()
-            imageData.put(MediaStore.Images.Media.IS_PENDING, 0)
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                imageData.put(MediaStore.Images.Media.IS_PENDING, 0)
+            }
             resolver.update(uri, imageData, null, null)
         } catch (e: FileNotFoundException) {
             Log.e("GREC", e.message, e)
