@@ -11,20 +11,17 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.viewbinding.ViewBinding
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.formatter.IAxisValueFormatter
 import com.github.mikephil.charting.formatter.PercentFormatter
-import kotlinx.android.synthetic.main.activity_results.*
-import kotlinx.android.synthetic.main.days_results.view.*
-import kotlinx.android.synthetic.main.general_data_results.view.*
-import kotlinx.android.synthetic.main.hours_results.view.*
-import kotlinx.android.synthetic.main.participants_data_results.view.*
 import me.jacobrr.whatsappanalyzer.Constants
 import me.jacobrr.whatsappanalyzer.PeopleListAdapter
 import me.jacobrr.whatsappanalyzer.R
+import me.jacobrr.whatsappanalyzer.databinding.*
 import me.jacobrr.whatsappanalyzer.logic.ConversationData
 import me.jacobrr.whatsappanalyzer.logic.ConversationDataDB
 import me.jacobrr.whatsappanalyzer.tasks.AnalyzePeopleTask
@@ -33,20 +30,22 @@ import me.jacobrr.whatsappanalyzer.tasks.ShareScreenshotTask
 class ResultsActivity : AppCompatActivity() {
 
     private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
+    private lateinit var binding: ActivityResultsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_results)
+        binding = ActivityResultsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
 
         // Set up the ViewPager with the sections adapter.
-        container.adapter = mSectionsPagerAdapter
-        tabs.setupWithViewPager(container)
+        binding.container.adapter = mSectionsPagerAdapter
+        binding.tabs.setupWithViewPager(binding.container)
 
         if (Constants.conversationData.javaClass == ConversationData::class.java)
             AnalyzePeopleTask(this).execute()
@@ -91,112 +90,118 @@ class ResultsActivity : AppCompatActivity() {
      */
     class PlaceholderFragment : Fragment() {
 
+        private var _binding: ViewBinding? = null
+        private val binding get() = _binding!!
+
         override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                                   savedInstanceState: Bundle?): View? {
             var rootView: View? = null
             when (arguments!!.getInt(ARG_SECTION_NUMBER)) {
                 0 -> {
-                    rootView = inflater.inflate(R.layout.general_data_results, container, false)
-                    createGeneralResultsView(rootView!!)
+                    _binding = GeneralDataResultsBinding.inflate(layoutInflater, container, false)
+                    createGeneralResultsView(binding as GeneralDataResultsBinding)
                 }
                 1 -> {
-                    rootView = inflater.inflate(R.layout.participants_data_results, container, false)
-                    createParticipantsView(rootView!!)
+                    _binding = ParticipantsDataResultsBinding.inflate(layoutInflater, container, false)
+                    createParticipantsView(binding as ParticipantsDataResultsBinding)
                 }
                 2 -> {
-                    rootView = inflater.inflate(R.layout.days_results, container, false)
+                    _binding = DaysResultsBinding.inflate(layoutInflater, container, false)
                     if (Constants.conversationData.javaClass == ConversationData::class.java)
-                        createDaysView(rootView!!)
+                        createDaysView(binding as DaysResultsBinding)
                 }
                 3 -> {
-                    rootView = inflater.inflate(R.layout.hours_results, container, false)
+                    _binding = HoursResultsBinding.inflate(layoutInflater, container, false)
                     if (Constants.conversationData.javaClass == ConversationData::class.java)
-                        createHoursView(rootView!!)
+                        createHoursView(binding as HoursResultsBinding)
                 }
             }
-
+            rootView = binding.root
             return rootView
         }
 
-        private fun createGeneralResultsView(rootView: View) {
+        private fun createGeneralResultsView(binding: GeneralDataResultsBinding) {
             val cv = Constants.conversationData
-
-            rootView.conversationDays.text = "${cv.totalDaysTalked}"
-            rootView.totalMessages.text = "${cv.totalMessages}"
-            rootView.msg_avg.text = String.format("%.2f", cv.dailyAvg)
-            rootView.msg_real_avg.text = String.format("%.2f", cv.realDailyAvg)
-
             val day = cv.mostTalkedDay
-            rootView.most_talked_day.text = getString(R.string.most_talked_day_result, day, cv.getDayData(day))
-            rootView.most_talked_month.text = getString(R.string.most_talked_month_result, cv.mostTalkedMonth, cv.getMonthData(cv.mostTalkedMonth))
+            binding.apply {
+                conversationDays.text = "${cv.totalDaysTalked}"
+                totalMessages.text = "${cv.totalMessages}"
+                msgAvg.text = String.format("%.2f", cv.dailyAvg)
+                msgRealAvg.text = String.format("%.2f", cv.realDailyAvg)
+                mostTalkedDay.text = getString(R.string.most_talked_day_result, day, cv.getDayData(day))
+                mostTalkedMonth.text = getString(R.string.most_talked_month_result, cv.mostTalkedMonth, cv.getMonthData(cv.mostTalkedMonth))
+            }
         }
 
-        private fun createParticipantsView(rootView: View) {
+        private fun createParticipantsView(binding: ParticipantsDataResultsBinding) {
             val viewManager = LinearLayoutManager(context)
             val peopleListAdapter = PeopleListAdapter(Constants.conversationData)
 
-            rootView.people_list.apply {
+            binding.peopleList.apply {
                 setHasFixedSize(true)
                 layoutManager = viewManager
                 adapter = peopleListAdapter
             }
         }
 
-        private fun createDaysView(rootView: View) {
+        private fun createDaysView(binding: DaysResultsBinding) {
             val cv = Constants.conversationData as ConversationData
-            val data = cv.chartDaysData
-            rootView.days_chart.data = data.component1()
-            formatLineChart(rootView.days_chart, rootView.context, data.component2())
-            val description = Description()
-            description.text = "Days"
-            description.textColor = Color.LTGRAY
-            rootView.days_chart.description = description
+            val daysData = cv.chartDaysData
+            binding.daysChart.data = daysData.component1()
+            formatLineChart(binding.daysChart, binding.root.context, daysData.component2(), "Days")
 
-
-            val data2 = cv.allDaysChartData
-            rootView.all_days_chart.data = data2.component1()
-            formatLineChart(rootView.all_days_chart, rootView.context, data2.component2())
-            description.text = "All days"
-            rootView.all_days_chart.description = description
+            val allDaysData = cv.allDaysChartData
+            binding.allDaysChart.data = allDaysData.component1()
+            formatLineChart(binding.allDaysChart, binding.root.context, allDaysData.component2(), "All days")
         }
 
-        private fun createHoursView(rootView: View) {
+        private fun createHoursView(binding: HoursResultsBinding) {
             val cv = Constants.conversationData as ConversationData
-            rootView.hours_chart.data = cv.timeChartData
-            rootView.hours_chart.data.setValueFormatter(PercentFormatter())
-
+            val theme = binding.root.context.theme
             val typedValue = TypedValue()
-            val theme = rootView.context.theme
-            theme.resolveAttribute(R.attr.colorPrimary, typedValue, true)
-            rootView.hours_chart.setHoleColor(0)
             theme.resolveAttribute(R.attr.colorAccent, typedValue, true)
             val color = typedValue.data
-            (rootView.hours_chart.data.dataSet as PieDataSet).setColors(color, color + 50, color - 50, color + 100, color - 100)
-            rootView.hours_chart.setUsePercentValues(true)
-            rootView.hours_chart.centerText = "Time of the day"
-            rootView.hours_chart.setCenterTextColor(Color.LTGRAY)
+            val title = getString(R.string.time_of_the_day_title)
             val des = Description()
-            rootView.hours_chart.description = des
-            rootView.hours_chart.legend.isEnabled = false
+            des.text = title
+            binding.hoursChart.apply {
+                data = cv.timeChartData
+                data.setValueFormatter(PercentFormatter())
+                setHoleColor(0)
+                (data.dataSet as PieDataSet).setColors(color, color + 50, color - 50, color + 100, color - 100)
+                setUsePercentValues(true)
+                centerText = title
+                setCenterTextColor(Color.LTGRAY)
+                description = des
+                legend.isEnabled = false
+            }
         }
 
-        private fun formatLineChart(ln: LineChart, cont: Context, tags: List<String>) {
-            val leftAxis = ln.axisLeft
-            leftAxis.textColor = Color.LTGRAY
-            val xAxis = ln.xAxis
-            xAxis.textColor = Color.LTGRAY
-            xAxis.position = XAxis.XAxisPosition.BOTTOM
+        private fun formatLineChart(ln: LineChart, cont: Context, tags: List<String>, descText: String) {
             val formatter = IAxisValueFormatter { value, _ -> tags[value.toInt()] }
-            xAxis.valueFormatter = formatter
+            val desc = Description().apply {
+                text = descText
+                textColor = Color.LTGRAY
+            }
 
             val typedValue = TypedValue()
             val theme = cont.theme
             theme.resolveAttribute(R.attr.colorPrimary, typedValue, true)
-            ln.setGridBackgroundColor(typedValue.data)
-            ln.setBorderColor(Color.LTGRAY)
-            ln.axisRight.isEnabled = false
-            ln.legend.textColor = Color.LTGRAY
-            ln.lineData.setValueTextColor(Color.LTGRAY)
+
+            ln.apply {
+                axisLeft.textColor = Color.LTGRAY
+
+                xAxis.textColor = Color.LTGRAY
+                xAxis.position = XAxis.XAxisPosition.BOTTOM
+                xAxis.valueFormatter = formatter
+
+                description = desc
+                setGridBackgroundColor(typedValue.data)
+                setBorderColor(Color.LTGRAY)
+                axisRight.isEnabled = false
+                legend.textColor = Color.LTGRAY
+                lineData.setValueTextColor(Color.LTGRAY)
+            }
         }
 
         companion object {

@@ -13,10 +13,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.nononsenseapps.filepicker.FilePickerActivity
 import com.nononsenseapps.filepicker.Utils
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.content_main.*
 import me.jacobrr.whatsappanalyzer.Constants
 import me.jacobrr.whatsappanalyzer.R
+import me.jacobrr.whatsappanalyzer.databinding.ActivityMainBinding
 import me.jacobrr.whatsappanalyzer.db.DataDBHandler
 import me.jacobrr.whatsappanalyzer.db.SavedDataAdapter
 import me.jacobrr.whatsappanalyzer.tasks.CreateDataTask
@@ -25,16 +24,18 @@ import java.io.FileNotFoundException
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        setSupportActionBar(toolbar)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        setSupportActionBar(binding.toolbar)
 
         Constants.dbHandler = DataDBHandler(this)
-
         val sva = SavedDataAdapter(Constants.dbHandler!!.allData)
         val viewManager = LinearLayoutManager(applicationContext)
-        saved_analysis_list.apply {
+        binding.content.savedAnalysisList.apply {
             setHasFixedSize(true)
             layoutManager = viewManager
             adapter = sva

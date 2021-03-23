@@ -3,23 +3,27 @@ package me.jacobrr.whatsappanalyzer.activities
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_person.*
 import me.jacobrr.whatsappanalyzer.Constants
-import me.jacobrr.whatsappanalyzer.R
+import me.jacobrr.whatsappanalyzer.databinding.ActivityPersonBinding
 import java.util.*
 
 class PersonActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityPersonBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_person)
+        binding = ActivityPersonBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         Log.i("Persona", Constants.person.toString())
-        person_view_aggressiveness.text = Constants.person?.aggressiveness?.let { getFormattedString(it) }
-        person_view_happiness.text = Constants.person?.happiness?.let { getFormattedString(it) }
-        person_view_fear.text = Constants.person?.fear?.let { getFormattedString(it) }
-        person_view_love.text = Constants.person?.love?.let { getFormattedString(it) }
-        person_view_sadness.text = Constants.person?.sadness?.let { getFormattedString(it) }
+        binding.apply {
+            personViewAggressiveness.text = Constants.person?.aggressiveness?.let { getFormattedString(it) }
+            personViewHappiness.text = Constants.person?.happiness?.let { getFormattedString(it) }
+            personViewFear.text = Constants.person?.fear?.let { getFormattedString(it) }
+            personViewLove.text = Constants.person?.love?.let { getFormattedString(it) }
+            personViewSadness.text = Constants.person?.sadness?.let { getFormattedString(it) }
+        }
     }
 
     private fun getFormattedString(param: Float): String {
