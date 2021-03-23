@@ -42,9 +42,7 @@ class DataDBHandler(context: Context) {
         values.put(DataReaderContract.DataEntry.COLUMN_NAME_TOTAL_DAYS, cv.totalDaysTalked)
         values.put(DataReaderContract.DataEntry.COLUMN_NAME_TOTAL_MSGS, cv.totalMessages)
 
-        val newRow: Long
-        newRow = db.insert(DataReaderContract.DataEntry.TABLE_NAME,
+        return db.insert(DataReaderContract.DataEntry.TABLE_NAME,
                 DataReaderContract.DataEntry.COLUMN_NULLABLE, values)
-        return newRow
     }
 }

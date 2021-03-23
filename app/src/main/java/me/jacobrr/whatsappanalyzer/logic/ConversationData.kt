@@ -27,11 +27,11 @@ class ConversationData(override val conversationName: String) : IConversationDat
     override val participants: List<String>
         get() = participantsMap.keys.toList()
     override val mostTalkedDay: LocalDate
-        get() = days.maxBy { it.value }!!.key
+        get() = days.maxByOrNull { it.value }!!.key
     override val totalDaysTalked: Int
         get() = totalDays.size
     override val mostTalkedMonth: String
-        get() = months.maxBy { it.value }!!.key
+        get() = months.maxByOrNull { it.value }!!.key
     override val totalMessages: Int
         get() = participantsMap.map { it.value }.sum()
     override val dailyAvg: Float

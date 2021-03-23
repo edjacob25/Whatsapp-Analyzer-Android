@@ -34,7 +34,7 @@ class LineAnalyzer {
     }
 
     fun analyzeLine(line: String): AnalyzedLine? {
-        val lineCleaned = line.replace('\u00A0',' ')
+        val lineCleaned = line.replace('\u00A0', ' ')
         return try {
             val match = regex.matchEntire(lineCleaned) ?: throw MatchException()
 
