@@ -22,7 +22,8 @@ class ConversationDataDB : IConversationData {
     private var mostTalkedMonthT: TupleA
     override var totalMessages: Int = 0
         private set
-    override val participants: List<String> = participantsMap.keys.toList()
+    override val participants: List<String>
+        get() = participantsMap.keys.toList()
     override val mostTalkedDay: LocalDate
         get() = mostTalkedDayT.x
     override var totalDaysTalked: Int = 0
@@ -37,10 +38,10 @@ class ConversationDataDB : IConversationData {
         private set
 
     val monthDB: String
-        get() = mostTalkedMonth
+        get() = "$mostTalkedMonthT"
 
     val dayDB: String
-        get() = mostTalkedDay.toString()
+        get() = "$mostTalkedDayT"
 
     val participantsDB: String
         get() {
@@ -150,7 +151,7 @@ internal class TupleB : Serializable {
     }
 
     override fun toString(): String {
-        return "${sdf.format(Date.from(x.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()))}, $y"
+        return "${sdf.format(Date.from(x.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()))},$y"
     }
 
     companion object {
