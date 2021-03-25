@@ -21,4 +21,5 @@
     <string name="participants_title">Participants</string>
     <string name="time_of_the_day_title">Time of the day</string>
     <string name="messages">%d messages</string>
+    <string name="select_a_file_to_be_analyzed">Select a file to be analyzed</string>
 </resources>

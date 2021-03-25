@@ -7,13 +7,13 @@
     <string name="participant_header_words_avg">Promedio de palabras</string>
     <string name="analyzing">Analizando</string>
     <string name="title_activity_results">Resultados</string>
-    <string name="days">Dias</string>
+    <string name="days">Días</string>
     <string name="most_talked_day_result">Es %1$td/%1$tm/%1$ty con %2$d mensajes.</string>
     <string name="most_talked_month_result">Es %1$s con %2$d mensajes.</string>
-    <string name="days_since_the_conversation_started">Dias desde que la conversación inició</string>
+    <string name="days_since_the_conversation_started">Días desde que la conversación inició</string>
     <string name="total_messages">Mensajes totales</string>
     <string name="messages_average">Promedio de mensajes</string>
-    <string name="real_messages_average">Promedio de mensajes(Incluyendo dias sin hablar)</string>
+    <string name="real_messages_average">Promedio de mensajes(Incluyendo días sin hablar)</string>
     <string name="most_talked_day">Día mas hablado</string>
     <string name="most_talked_month">Mes mas hablado</string>
     <string name="save">Guardar</string>
@@ -21,4 +21,5 @@
     <string name="participants_title">Participantes</string>
     <string name="time_of_the_day_title">Tiempo del día</string>
     <string name="messages">%d mensajes</string>
+    <string name="select_a_file_to_be_analyzed">Selecciona un arcghivo para analizar</string>
 </resources>
