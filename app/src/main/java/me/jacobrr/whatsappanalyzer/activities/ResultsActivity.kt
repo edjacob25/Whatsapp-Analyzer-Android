@@ -1,16 +1,23 @@
 package me.jacobrr.whatsappanalyzer.activities
 
+import android.content.ContentValues
 import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Log
 import android.util.TypedValue
 import android.view.*
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.drawToBitmap
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.Description
@@ -18,14 +25,19 @@ import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.formatter.IAxisValueFormatter
 import com.github.mikephil.charting.formatter.PercentFormatter
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import me.jacobrr.whatsappanalyzer.Constants
 import me.jacobrr.whatsappanalyzer.PeopleListAdapter
 import me.jacobrr.whatsappanalyzer.R
 import me.jacobrr.whatsappanalyzer.databinding.*
 import me.jacobrr.whatsappanalyzer.logic.ConversationData
 import me.jacobrr.whatsappanalyzer.logic.ConversationDataDB
-import me.jacobrr.whatsappanalyzer.tasks.AnalyzePeopleTask
-import me.jacobrr.whatsappanalyzer.tasks.ShareScreenshotTask
+import me.jacobrr.whatsappanalyzer.util.executeAsyncTask
+import java.io.FileNotFoundException
+import java.io.IOException
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class ResultsActivity : AppCompatActivity() {
 
@@ -48,7 +60,18 @@ class ResultsActivity : AppCompatActivity() {
         binding.tabs.setupWithViewPager(binding.container)
 
         if (Constants.conversationData.javaClass == ConversationData::class.java)
-            AnalyzePeopleTask(this).execute()
+            CoroutineScope(Dispatchers.Main).executeAsyncTask(
+                    onPreExecute = {},
+                    doInBackground = {
+                        (Constants.conversationData as ConversationData).createPeopleData()
+                    },
+                    onPostExecute = {
+                        val l = findViewById<View>(R.id.people_list) as RecyclerView
+                        val adapter = l.adapter as PeopleListAdapter
+                        adapter.ready = true
+                        Toast.makeText(this, "Done", Toast.LENGTH_SHORT).show()
+                    }
+            )
     }
 
 
@@ -75,9 +98,54 @@ class ResultsActivity : AppCompatActivity() {
     }
 
     private fun share() {
-        ShareScreenshotTask(this).execute()
-    }
+        CoroutineScope(Dispatchers.Main).executeAsyncTask(
+                onPreExecute = {},
+                doInBackground = {
+                    val bytemap = binding.container.drawToBitmap()
+                    val now = LocalDateTime.now()
+                    val name = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd_hh:mm:ss"))
+                    val resolver = applicationContext.contentResolver
+                    val imageCollection = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q)
+                        MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)
+                    else
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI
 
+                    val imageData = ContentValues().apply {
+                        put(MediaStore.Images.Media.DISPLAY_NAME, name)
+                        put(MediaStore.Images.Media.MIME_TYPE, "image/png")
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                            put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/Screenshots/")
+                            put(MediaStore.Images.Media.IS_PENDING, 1)
+                        }
+                    }
+                    val uri = resolver.insert(imageCollection, imageData)
+                    try {
+                        resolver.openOutputStream(uri!!).use { out ->
+                            bytemap.compress(Bitmap.CompressFormat.PNG, 100, out)
+                        }
+
+                        imageData.clear()
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                            imageData.put(MediaStore.Images.Media.IS_PENDING, 0)
+                        }
+                        resolver.update(uri, imageData, null, null)
+                    } catch (e: FileNotFoundException) {
+                        Log.e("GREC", e.message, e)
+                    } catch (e: IOException) {
+                        Log.e("GREC", e.message, e)
+                    }
+                    uri!!
+                },
+                onPostExecute = {
+                    val intent = Intent(Intent.ACTION_SEND)
+                    intent.putExtra(Intent.EXTRA_TEXT, "Generated with Whatsapp Analyzer")
+                    intent.type = "image/png"
+                    intent.putExtra(Intent.EXTRA_STREAM, it)
+                    startActivity(Intent.createChooser(intent, "Send image"))
+                }
+        )
+        //ShareScreenshotTask(this).execute()
+    }
 
     private fun saveDB() {
         Toast.makeText(this, "Saving", Toast.LENGTH_LONG).show()
@@ -93,8 +161,7 @@ class ResultsActivity : AppCompatActivity() {
         private val binding get() = _binding!!
 
         override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                                  savedInstanceState: Bundle?): View? {
-            var rootView: View? = null
+                                  savedInstanceState: Bundle?): View {
             when (arguments!!.getInt(ARG_SECTION_NUMBER)) {
                 0 -> {
                     _binding = GeneralDataResultsBinding.inflate(layoutInflater, container, false)
@@ -115,8 +182,7 @@ class ResultsActivity : AppCompatActivity() {
                         createHoursView(binding as HoursResultsBinding)
                 }
             }
-            rootView = binding.root
-            return rootView
+            return binding.root
         }
 
         private fun createGeneralResultsView(binding: GeneralDataResultsBinding) {

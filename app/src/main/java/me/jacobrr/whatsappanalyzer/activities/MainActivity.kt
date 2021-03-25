@@ -2,9 +2,9 @@ package me.jacobrr.whatsappanalyzer.activities
 
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
-import android.os.ParcelFileDescriptor
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -13,13 +13,18 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.nononsenseapps.filepicker.FilePickerActivity
 import com.nononsenseapps.filepicker.Utils
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import me.jacobrr.whatsappanalyzer.Constants
 import me.jacobrr.whatsappanalyzer.R
 import me.jacobrr.whatsappanalyzer.databinding.ActivityMainBinding
 import me.jacobrr.whatsappanalyzer.db.DataDBHandler
 import me.jacobrr.whatsappanalyzer.db.SavedDataAdapter
-import me.jacobrr.whatsappanalyzer.tasks.CreateDataTask
-import java.io.FileNotFoundException
+import me.jacobrr.whatsappanalyzer.logic.ConversationData
+import me.jacobrr.whatsappanalyzer.logic.LineAnalyzer
+import me.jacobrr.whatsappanalyzer.util.executeAsyncTask
+import java.io.*
+import java.time.LocalDateTime
 
 
 class MainActivity : AppCompatActivity() {
@@ -41,17 +46,11 @@ class MainActivity : AppCompatActivity() {
             adapter = sva
         }
 
+        binding.fab.setOnClickListener(clickListener)
+
         if (intent.action == Intent.ACTION_VIEW) {
             val returnUri = intent.data
-            var mInputPFD: ParcelFileDescriptor? = null
-            try {
-                mInputPFD = contentResolver.openFileDescriptor(returnUri!!, "r")
-            } catch (e: FileNotFoundException) {
-                e.printStackTrace()
-                Log.e("MainActivity", "File not found.")
-            }
-
-            CreateDataTask(this, returnUri!!.lastPathSegment!!).execute(mInputPFD)
+            createDataInBackground(returnUri!!)
         }
 
     }
@@ -74,8 +73,70 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun buttonClick(view: View) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode == Activity.RESULT_OK) {
+            val files = Utils.getSelectedFilesFromResult(data!!)
+            val uri = files[0]
+            createDataInBackground(uri)
+        }
+    }
+
+    private fun createDataInBackground(uri: Uri) {
+        try {
+            val mInputPFD = contentResolver.openFileDescriptor(uri, "r")
+            CoroutineScope(Dispatchers.Main).executeAsyncTask(
+                    onPreExecute = {
+                        Log.d("Timings", "Start ${LocalDateTime.now()}")
+                        binding.content.savedAnalysisList.visibility = View.INVISIBLE
+                        binding.content.loadingPanel.visibility = View.VISIBLE
+                    },
+                    doInBackground = {
+                        Log.d("Timings", "Background ${LocalDateTime.now()}")
+                        val fd = mInputPFD?.fileDescriptor
+                        var bf: BufferedReader? = null
+                        try {
+                            bf = BufferedReader(InputStreamReader(FileInputStream(fd), "utf-8"))
+                        } catch (e: Exception) {
+                            System.err.println(e)
+                        }
+                        val analyzer = LineAnalyzer()
+                        val data = ConversationData(uri.lastPathSegment!!)
+
+                        try {
+                            var line: String? = bf!!.readLine()
+                            while (line != null) {
+                                val a = analyzer.analyzeLine(line)
+                                if (a != null)
+                                    data.addData(a)
+                                line = bf.readLine()
+                            }
+                        } catch (e: IOException) {
+                            e.printStackTrace()
+                        }
+
+                        data.createTotalDaysData()
+                        data.createMonthsData()
+                        data
+                    },
+                    onPostExecute = {
+                        Log.d("Timings", "Post ${LocalDateTime.now()}")
+                        binding.content.savedAnalysisList.visibility = View.VISIBLE
+                        binding.content.loadingPanel.visibility = View.GONE
+                        Constants.conversationData = it
+                        val intent = Intent(applicationContext, ResultsActivity::class.java)
+                        startActivity(intent)
+                    }
+            )
+        } catch (e: FileNotFoundException) {
+            e.printStackTrace()
+            Log.e("MainActivity", "File not found.")
+        }
+    }
+
+    private val clickListener = View.OnClickListener {
         val context = applicationContext
         // This always works
         val i = Intent(context, MyPickerActivity::class.java)
@@ -93,25 +154,5 @@ class MainActivity : AppCompatActivity() {
         // internal memory.
         i.putExtra(FilePickerActivity.EXTRA_START_PATH, Environment.getExternalStorageDirectory().path)
         startActivityForResult(i, 1)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (resultCode == Activity.RESULT_OK) {
-            val files = Utils.getSelectedFilesFromResult(data!!)
-            val uri = files[0]
-            var mInputPFD: ParcelFileDescriptor? = null
-            try {
-                mInputPFD = contentResolver.openFileDescriptor(uri, "r")
-            } catch (e: FileNotFoundException) {
-                e.printStackTrace()
-                Log.e("MainActivity", "File not found.")
-            }
-
-
-            CreateDataTask(this, uri.lastPathSegment!!).execute(mInputPFD)
-        }
     }
 }
