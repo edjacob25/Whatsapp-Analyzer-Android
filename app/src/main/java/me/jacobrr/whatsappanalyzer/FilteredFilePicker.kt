@@ -32,6 +32,6 @@ class FilteredFilePicker : FilePickerFragment() {
 
     companion object {
         // File extension to filter on
-        private val EXTENSION = ".txt"
+        private const val EXTENSION = ".txt"
     }
 }

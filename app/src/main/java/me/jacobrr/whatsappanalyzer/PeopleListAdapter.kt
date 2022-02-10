@@ -15,9 +15,8 @@ import me.jacobrr.whatsappanalyzer.logic.IConversationData
 /**
  * Created by jacob on 21/11/2015.
  */
-class PeopleListAdapter(private val cv: IConversationData) : RecyclerView.Adapter<PeopleListAdapter.PersonHolder>() {
-
-    var ready = false
+class PeopleListAdapter(private val cv: IConversationData, var ready: Boolean = false) :
+    RecyclerView.Adapter<PeopleListAdapter.PersonHolder>() {
 
     class PersonHolder(val view: View) : RecyclerView.ViewHolder(view)
 

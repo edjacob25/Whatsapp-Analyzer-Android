@@ -14,17 +14,18 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.drawToBitmap
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
+import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.formatter.IAxisValueFormatter
 import com.github.mikephil.charting.formatter.PercentFormatter
+import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import me.jacobrr.whatsappanalyzer.Constants
@@ -43,6 +44,7 @@ class ResultsActivity : AppCompatActivity() {
 
     private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
     private lateinit var binding: ActivityResultsBinding
+    private var finishedProcessing: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,24 +55,39 @@ class ResultsActivity : AppCompatActivity() {
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mSectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
 
         // Set up the ViewPager with the sections adapter.
+        mSectionsPagerAdapter = SectionsPagerAdapter(this)
         binding.container.adapter = mSectionsPagerAdapter
-        binding.tabs.setupWithViewPager(binding.container)
+        TabLayoutMediator(
+            binding.tabs, binding.container
+        ) { tab, position ->
+            tab.text = when (position) {
+                0 -> getString(R.string.general_data_title)
+                1 -> getString(R.string.participants_title)
+                2 -> getString(R.string.days)
+                3 -> getString(R.string.time_of_the_day_title)
+                else -> ""
+            }
+        }.attach()
+
+        //binding.tabs.setupWithViewPager(binding.container)
 
         if (Constants.conversationData.javaClass == ConversationData::class.java)
             CoroutineScope(Dispatchers.Main).executeAsyncTask(
-                    onPreExecute = {},
-                    doInBackground = {
-                        (Constants.conversationData as ConversationData).createPeopleData()
-                    },
-                    onPostExecute = {
-                        val l = findViewById<View>(R.id.people_list) as RecyclerView
+                onPreExecute = {},
+                doInBackground = {
+                    (Constants.conversationData as ConversationData).createPeopleData()
+                },
+                onPostExecute = {
+                    finishedProcessing = true
+                    val l = findViewById<RecyclerView>(R.id.people_list)
+                    if (l != null) {
                         val adapter = l.adapter as PeopleListAdapter
                         adapter.ready = true
-                        Toast.makeText(this, "Done", Toast.LENGTH_SHORT).show()
                     }
+                    Toast.makeText(this, "Done", Toast.LENGTH_SHORT).show()
+                }
             )
     }
 
@@ -200,7 +217,8 @@ class ResultsActivity : AppCompatActivity() {
 
         private fun createParticipantsView(binding: ParticipantsDataResultsBinding) {
             val viewManager = LinearLayoutManager(context)
-            val peopleListAdapter = PeopleListAdapter(Constants.conversationData)
+            val peopleListAdapter =
+                PeopleListAdapter(Constants.conversationData, (activity as ResultsActivity).finishedProcessing)
 
             binding.peopleList.apply {
                 setHasFixedSize(true)
@@ -296,26 +314,16 @@ class ResultsActivity : AppCompatActivity() {
      * A [FragmentPagerAdapter] that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
-    inner class SectionsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+    inner class SectionsPagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
 
-        override fun getItem(position: Int): Fragment {
+        override fun createFragment(position: Int): Fragment {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
             return PlaceholderFragment.newInstance(position)
         }
 
-        override fun getCount(): Int {
+        override fun getItemCount(): Int {
             return 4
-        }
-
-        override fun getPageTitle(position: Int): CharSequence? {
-            when (position) {
-                0 -> return getString(R.string.general_data_title)
-                1 -> return getString(R.string.participants_title)
-                2 -> return getString(R.string.days)
-                3 -> return getString(R.string.time_of_the_day_title)
-            }
-            return null
         }
     }
 }

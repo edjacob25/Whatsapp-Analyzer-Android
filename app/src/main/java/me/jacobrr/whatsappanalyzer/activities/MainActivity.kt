@@ -73,12 +73,10 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    var launchActivity = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
 
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (resultCode == Activity.RESULT_OK) {
-            val files = Utils.getSelectedFilesFromResult(data!!)
+        if (result.resultCode == RESULT_OK) {
+            val files = Utils.getSelectedFilesFromResult(result.data!!)
             val uri = files[0]
             createDataInBackground(uri)
         }
@@ -153,6 +151,6 @@ class MainActivity : AppCompatActivity() {
         // dangerous. Always use Android's API calls to get paths to the SD-card or
         // internal memory.
         i.putExtra(FilePickerActivity.EXTRA_START_PATH, Environment.getExternalStorageDirectory().path)
-        startActivityForResult(i, 1)
+        launchActivity.launch(i)
     }
 }

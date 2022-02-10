@@ -33,7 +33,7 @@ class WordAnalyzer {
         while (i < messages.size) {
             val words = messages[i].split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
 
-            words.filter { it.toLowerCase() in definedWords }.map { p.addNewWord(definedWords[it.toLowerCase()]!!) }
+            words.filter { it.lowercase() in definedWords }.map { p.addNewWord(definedWords[it.lowercase()]!!) }
             i += step
         }
         return p
