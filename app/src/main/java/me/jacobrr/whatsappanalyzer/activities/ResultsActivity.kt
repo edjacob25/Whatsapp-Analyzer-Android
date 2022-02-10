@@ -162,7 +162,7 @@ class ResultsActivity : AppCompatActivity() {
 
         override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                                   savedInstanceState: Bundle?): View {
-            when (arguments!!.getInt(ARG_SECTION_NUMBER)) {
+            when (requireArguments().getInt(ARG_SECTION_NUMBER)) {
                 0 -> {
                     _binding = GeneralDataResultsBinding.inflate(layoutInflater, container, false)
                     createGeneralResultsView(binding as GeneralDataResultsBinding)
