@@ -3,10 +3,10 @@ package me.jacobrr.whatsappanalyzer.util
 import kotlinx.coroutines.*
 
 fun <R> CoroutineScope.executeAsyncTask(
-        onPreExecute: () -> Unit,
-        doInBackground: () -> R,
-        onPostExecute: (R) -> Unit,
-        dispatcher: CoroutineDispatcher = Dispatchers.IO
+    onPreExecute: () -> Unit,
+    doInBackground: () -> R,
+    onPostExecute: (R) -> Unit,
+    dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) = launch {
     onPreExecute() // runs in Main Thread
     val result = withContext(dispatcher) {
@@ -16,11 +16,11 @@ fun <R> CoroutineScope.executeAsyncTask(
 }
 
 fun <P, R> CoroutineScope.executeAsyncTask(
-        onPreExecute: () -> Unit,
-        doInBackground: suspend (suspend (P) -> Unit) -> R,
-        onPostExecute: (R) -> Unit,
-        onProgressUpdate: (P) -> Unit,
-        dispatcher: CoroutineDispatcher = Dispatchers.IO
+    onPreExecute: () -> Unit,
+    doInBackground: suspend (suspend (P) -> Unit) -> R,
+    onPostExecute: (R) -> Unit,
+    onProgressUpdate: (P) -> Unit,
+    dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) = launch {
     onPreExecute()
 

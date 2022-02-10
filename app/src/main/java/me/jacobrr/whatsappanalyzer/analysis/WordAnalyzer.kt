@@ -1,7 +1,5 @@
 package me.jacobrr.whatsappanalyzer.analysis
 
-import java.util.*
-
 /**
  * Created by jacob on 25/11/2015.
  */

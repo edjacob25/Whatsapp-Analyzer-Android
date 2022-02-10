@@ -8,7 +8,6 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.*
-import kotlin.collections.HashMap
 
 /**
  * Created by jacob on 22/11/2015.
@@ -52,7 +51,17 @@ class ConversationDataDB : IConversationData {
             return res
         }
 
-    constructor(id: Int, dailyAvg: Float, mostTalkedDay: String, mostTalkedMonth: String, participants: String, realDailyAvg: Float, totalDaysTalked: Int, totalMessages: Int, conversationName: String) {
+    constructor(
+        id: Int,
+        dailyAvg: Float,
+        mostTalkedDay: String,
+        mostTalkedMonth: String,
+        participants: String,
+        realDailyAvg: Float,
+        totalDaysTalked: Int,
+        totalMessages: Int,
+        conversationName: String
+    ) {
         this.id = id
         this.dailyAvg = dailyAvg
         this.mostTalkedDayT = TupleB(mostTalkedDay)

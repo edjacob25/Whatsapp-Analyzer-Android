@@ -69,7 +69,10 @@ class ConversationData(override val conversationName: String) : IConversationDat
 
     fun createMonthsData() {
         for (iterator in days.keys) {
-            months.merge(monthFormatter.format(iterator), days.getValue(iterator)) { currentValue, daysValue -> currentValue + daysValue }
+            months.merge(
+                monthFormatter.format(iterator),
+                days.getValue(iterator)
+            ) { currentValue, daysValue -> currentValue + daysValue }
         }
     }
 

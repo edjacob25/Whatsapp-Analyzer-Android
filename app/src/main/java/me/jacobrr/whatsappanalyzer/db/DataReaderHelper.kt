@@ -7,7 +7,8 @@ import android.database.sqlite.SQLiteOpenHelper
 /**
  * Created by jacob on 22/11/2015.
  */
-class DataReaderHelper(context: Context) : SQLiteOpenHelper(context, DataReaderContract.DATABASE_NAME, null, DataReaderContract.DATABASE_VERSION) {
+class DataReaderHelper(context: Context) :
+    SQLiteOpenHelper(context, DataReaderContract.DATABASE_NAME, null, DataReaderContract.DATABASE_VERSION) {
 
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(DataReaderContract.SQL_CREATE_ENTRIES)

@@ -69,15 +69,19 @@ class LineAnalyzer {
             try {
                 LocalTime.parse(dateStr, timeFormatter)
             } catch (e: DateTimeParseException) {
-                Log.e("TIME", "Could not parse Time with formatter from java.time, format is " +
-                        "${LocalTime.now().format(timeFormatter)} and date passed is $dateStr")
+                Log.e(
+                    "TIME", "Could not parse Time with formatter from java.time, format is " +
+                            "${LocalTime.now().format(timeFormatter)} and date passed is $dateStr"
+                )
                 try {
                     useOldFormatter = true
                     Log.d("TIME", "Parsing with old formatter")
                     Instant.ofEpochMilli(timeFormatter2.parse(dateStr)!!.time).atZone(zone).toLocalTime()
                 } catch (e: Exception) {
-                    Log.e("TIME", "Could not parse time with any formatter, old formatter is " +
-                            "${timeFormatter2.format(Date())} and date passed is $dateStr")
+                    Log.e(
+                        "TIME", "Could not parse time with any formatter, old formatter is " +
+                                "${timeFormatter2.format(Date())} and date passed is $dateStr"
+                    )
                     useOldFormatter = false
                     null
                 }
@@ -86,8 +90,10 @@ class LineAnalyzer {
             try {
                 Instant.ofEpochMilli(timeFormatter2.parse(dateStr)!!.time).atZone(zone).toLocalTime()
             } catch (e: Exception) {
-                Log.e("TIME", "Could not parse time with any formatter, old formatter is " +
-                        "${timeFormatter2.format(Date())} and date passed is $dateStr")
+                Log.e(
+                    "TIME", "Could not parse time with any formatter, old formatter is " +
+                            "${timeFormatter2.format(Date())} and date passed is $dateStr"
+                )
                 null
             }
         }

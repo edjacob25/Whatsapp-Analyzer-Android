@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import me.jacobrr.whatsappanalyzer.activities.PersonActivity
 import me.jacobrr.whatsappanalyzer.databinding.PeopleListItemBinding
@@ -24,7 +23,7 @@ class PeopleListAdapter(private val cv: IConversationData, var ready: Boolean = 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PersonHolder {
         val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.people_list_item, parent, false)
+            .inflate(R.layout.people_list_item, parent, false)
         return PersonHolder(view)
     }
 

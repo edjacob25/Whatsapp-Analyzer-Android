@@ -91,7 +91,6 @@ class ResultsActivity : AppCompatActivity() {
             )
     }
 
-
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_results, menu)
@@ -116,50 +115,50 @@ class ResultsActivity : AppCompatActivity() {
 
     private fun share() {
         CoroutineScope(Dispatchers.Main).executeAsyncTask(
-                onPreExecute = {},
-                doInBackground = {
-                    val bytemap = binding.container.drawToBitmap()
-                    val now = LocalDateTime.now()
-                    val name = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd_hh:mm:ss"))
-                    val resolver = applicationContext.contentResolver
-                    val imageCollection = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q)
-                        MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)
-                    else
-                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+            onPreExecute = {},
+            doInBackground = {
+                val bytemap = binding.container.drawToBitmap()
+                val now = LocalDateTime.now()
+                val name = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd_hh:mm:ss"))
+                val resolver = applicationContext.contentResolver
+                val imageCollection = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q)
+                    MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)
+                else
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI
 
-                    val imageData = ContentValues().apply {
-                        put(MediaStore.Images.Media.DISPLAY_NAME, name)
-                        put(MediaStore.Images.Media.MIME_TYPE, "image/png")
-                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-                            put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/Screenshots/")
-                            put(MediaStore.Images.Media.IS_PENDING, 1)
-                        }
+                val imageData = ContentValues().apply {
+                    put(MediaStore.Images.Media.DISPLAY_NAME, name)
+                    put(MediaStore.Images.Media.MIME_TYPE, "image/png")
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                        put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/Screenshots/")
+                        put(MediaStore.Images.Media.IS_PENDING, 1)
                     }
-                    val uri = resolver.insert(imageCollection, imageData)
-                    try {
-                        resolver.openOutputStream(uri!!).use { out ->
-                            bytemap.compress(Bitmap.CompressFormat.PNG, 100, out)
-                        }
-
-                        imageData.clear()
-                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-                            imageData.put(MediaStore.Images.Media.IS_PENDING, 0)
-                        }
-                        resolver.update(uri, imageData, null, null)
-                    } catch (e: FileNotFoundException) {
-                        Log.e("GREC", e.message, e)
-                    } catch (e: IOException) {
-                        Log.e("GREC", e.message, e)
-                    }
-                    uri!!
-                },
-                onPostExecute = {
-                    val intent = Intent(Intent.ACTION_SEND)
-                    intent.putExtra(Intent.EXTRA_TEXT, "Generated with Whatsapp Analyzer")
-                    intent.type = "image/png"
-                    intent.putExtra(Intent.EXTRA_STREAM, it)
-                    startActivity(Intent.createChooser(intent, "Send image"))
                 }
+                val uri = resolver.insert(imageCollection, imageData)
+                try {
+                    resolver.openOutputStream(uri!!).use { out ->
+                        bytemap.compress(Bitmap.CompressFormat.PNG, 100, out)
+                    }
+
+                    imageData.clear()
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                        imageData.put(MediaStore.Images.Media.IS_PENDING, 0)
+                    }
+                    resolver.update(uri, imageData, null, null)
+                } catch (e: FileNotFoundException) {
+                    Log.e("GREC", e.message, e)
+                } catch (e: IOException) {
+                    Log.e("GREC", e.message, e)
+                }
+                uri!!
+            },
+            onPostExecute = {
+                val intent = Intent(Intent.ACTION_SEND)
+                intent.putExtra(Intent.EXTRA_TEXT, "Generated with Whatsapp Analyzer")
+                intent.type = "image/png"
+                intent.putExtra(Intent.EXTRA_STREAM, it)
+                startActivity(Intent.createChooser(intent, "Send image"))
+            }
         )
         //ShareScreenshotTask(this).execute()
     }
@@ -177,8 +176,10 @@ class ResultsActivity : AppCompatActivity() {
         private var _binding: ViewBinding? = null
         private val binding get() = _binding!!
 
-        override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                                  savedInstanceState: Bundle?): View {
+        override fun onCreateView(
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
+        ): View {
             when (requireArguments().getInt(ARG_SECTION_NUMBER)) {
                 0 -> {
                     _binding = GeneralDataResultsBinding.inflate(layoutInflater, container, false)
@@ -211,7 +212,11 @@ class ResultsActivity : AppCompatActivity() {
                 msgAvg.text = String.format("%.2f", cv.dailyAvg)
                 msgRealAvg.text = String.format("%.2f", cv.realDailyAvg)
                 mostTalkedDay.text = getString(R.string.most_talked_day_result, day, cv.getDayData(day))
-                mostTalkedMonth.text = getString(R.string.most_talked_month_result, cv.mostTalkedMonth, cv.getMonthData(cv.mostTalkedMonth))
+                mostTalkedMonth.text = getString(
+                    R.string.most_talked_month_result,
+                    cv.mostTalkedMonth,
+                    cv.getMonthData(cv.mostTalkedMonth)
+                )
             }
         }
 
@@ -306,8 +311,6 @@ class ResultsActivity : AppCompatActivity() {
                 return fragment
             }
         }
-
-
     }
 
     /**

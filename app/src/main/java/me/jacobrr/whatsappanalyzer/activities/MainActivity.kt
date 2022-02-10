@@ -1,6 +1,5 @@
 package me.jacobrr.whatsappanalyzer.activities
 
-import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -9,6 +8,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.nononsenseapps.filepicker.FilePickerActivity
@@ -86,47 +86,47 @@ class MainActivity : AppCompatActivity() {
         try {
             val mInputPFD = contentResolver.openFileDescriptor(uri, "r")
             CoroutineScope(Dispatchers.Main).executeAsyncTask(
-                    onPreExecute = {
-                        Log.d("Timings", "Start ${LocalDateTime.now()}")
-                        binding.content.savedAnalysisList.visibility = View.INVISIBLE
-                        binding.content.loadingPanel.visibility = View.VISIBLE
-                    },
-                    doInBackground = {
-                        Log.d("Timings", "Background ${LocalDateTime.now()}")
-                        val fd = mInputPFD?.fileDescriptor
-                        var bf: BufferedReader? = null
-                        try {
-                            bf = BufferedReader(InputStreamReader(FileInputStream(fd), "utf-8"))
-                        } catch (e: Exception) {
-                            System.err.println(e)
-                        }
-                        val analyzer = LineAnalyzer()
-                        val data = ConversationData(uri.lastPathSegment!!)
-
-                        try {
-                            var line: String? = bf!!.readLine()
-                            while (line != null) {
-                                val a = analyzer.analyzeLine(line)
-                                if (a != null)
-                                    data.addData(a)
-                                line = bf.readLine()
-                            }
-                        } catch (e: IOException) {
-                            e.printStackTrace()
-                        }
-
-                        data.createTotalDaysData()
-                        data.createMonthsData()
-                        data
-                    },
-                    onPostExecute = {
-                        Log.d("Timings", "Post ${LocalDateTime.now()}")
-                        binding.content.savedAnalysisList.visibility = View.VISIBLE
-                        binding.content.loadingPanel.visibility = View.GONE
-                        Constants.conversationData = it
-                        val intent = Intent(applicationContext, ResultsActivity::class.java)
-                        startActivity(intent)
+                onPreExecute = {
+                    Log.d("Timings", "Start ${LocalDateTime.now()}")
+                    binding.content.savedAnalysisList.visibility = View.INVISIBLE
+                    binding.content.loadingPanel.visibility = View.VISIBLE
+                },
+                doInBackground = {
+                    Log.d("Timings", "Background ${LocalDateTime.now()}")
+                    val fd = mInputPFD?.fileDescriptor
+                    var bf: BufferedReader? = null
+                    try {
+                        bf = BufferedReader(InputStreamReader(FileInputStream(fd), "utf-8"))
+                    } catch (e: Exception) {
+                        System.err.println(e)
                     }
+                    val analyzer = LineAnalyzer()
+                    val data = ConversationData(uri.lastPathSegment!!)
+
+                    try {
+                        var line: String? = bf!!.readLine()
+                        while (line != null) {
+                            val a = analyzer.analyzeLine(line)
+                            if (a != null)
+                                data.addData(a)
+                            line = bf.readLine()
+                        }
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                    }
+
+                    data.createTotalDaysData()
+                    data.createMonthsData()
+                    data
+                },
+                onPostExecute = {
+                    Log.d("Timings", "Post ${LocalDateTime.now()}")
+                    binding.content.savedAnalysisList.visibility = View.VISIBLE
+                    binding.content.loadingPanel.visibility = View.GONE
+                    Constants.conversationData = it
+                    val intent = Intent(applicationContext, ResultsActivity::class.java)
+                    startActivity(intent)
+                }
             )
         } catch (e: FileNotFoundException) {
             e.printStackTrace()
