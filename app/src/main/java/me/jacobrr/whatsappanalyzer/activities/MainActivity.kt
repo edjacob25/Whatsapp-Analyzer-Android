@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
             adapter = sva
         }
 
-        binding.fab.setOnClickListener(clickListener)
+        binding.fab.setOnClickListener(fabClickListener)
 
         if (intent.action == Intent.ACTION_VIEW) {
             val returnUri = intent.data
@@ -134,7 +134,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private val clickListener = View.OnClickListener {
+    private val fabClickListener = View.OnClickListener {
         val context = applicationContext
         // This always works
         val i = Intent(context, MyPickerActivity::class.java)

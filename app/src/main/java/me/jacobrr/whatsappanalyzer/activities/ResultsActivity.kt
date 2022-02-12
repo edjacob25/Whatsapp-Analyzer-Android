@@ -42,7 +42,7 @@ import java.time.format.DateTimeFormatter
 
 class ResultsActivity : AppCompatActivity() {
 
-    private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
+    private var fragmentsAdapter: FragmentsAdapter? = null
     private lateinit var binding: ActivityResultsBinding
     private var finishedProcessing: Boolean = false
 
@@ -53,14 +53,17 @@ class ResultsActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
+        fragmentsAdapter = FragmentsAdapter(this)
 
         // Set up the ViewPager with the sections adapter.
-        mSectionsPagerAdapter = SectionsPagerAdapter(this)
-        binding.container.adapter = mSectionsPagerAdapter
+        binding.viewPager.adapter = fragmentsAdapter
+
+        // Create the TabLayoutMediator to use the fragments in the tab view
         TabLayoutMediator(
-            binding.tabs, binding.container
+            binding.tabs, binding.viewPager
         ) { tab, position ->
             tab.text = when (position) {
                 0 -> getString(R.string.general_data_title)
@@ -70,8 +73,6 @@ class ResultsActivity : AppCompatActivity() {
                 else -> ""
             }
         }.attach()
-
-        //binding.tabs.setupWithViewPager(binding.container)
 
         if (Constants.conversationData.javaClass == ConversationData::class.java)
             CoroutineScope(Dispatchers.Main).executeAsyncTask(
@@ -103,8 +104,6 @@ class ResultsActivity : AppCompatActivity() {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-
-
         when (item.itemId) {
             R.id.menu_save -> saveDB()
             R.id.menu_item_share -> share()
@@ -117,7 +116,7 @@ class ResultsActivity : AppCompatActivity() {
         CoroutineScope(Dispatchers.Main).executeAsyncTask(
             onPreExecute = {},
             doInBackground = {
-                val bytemap = binding.container.drawToBitmap()
+                val bytemap = binding.viewPager.drawToBitmap()
                 val now = LocalDateTime.now()
                 val name = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd_hh:mm:ss"))
                 val resolver = applicationContext.contentResolver
@@ -169,9 +168,9 @@ class ResultsActivity : AppCompatActivity() {
     }
 
     /**
-     * A placeholder fragment containing a simple view.
+     * A class which constructs fragments for the different sections in the results activity
      */
-    class PlaceholderFragment : Fragment() {
+    class DataFragment : Fragment() {
 
         private var _binding: ViewBinding? = null
         private val binding get() = _binding!!
@@ -303,8 +302,8 @@ class ResultsActivity : AppCompatActivity() {
              * Returns a new instance of this fragment for the given section
              * number.
              */
-            fun newInstance(sectionNumber: Int): PlaceholderFragment {
-                val fragment = PlaceholderFragment()
+            fun newInstance(sectionNumber: Int): DataFragment {
+                val fragment = DataFragment()
                 val args = Bundle()
                 args.putInt(ARG_SECTION_NUMBER, sectionNumber)
                 fragment.arguments = args
@@ -314,15 +313,15 @@ class ResultsActivity : AppCompatActivity() {
     }
 
     /**
-     * A [FragmentPagerAdapter] that returns a fragment corresponding to
+     * A [FragmentStateAdapter] that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
-    inner class SectionsPagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
+    inner class FragmentsAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
 
         override fun createFragment(position: Int): Fragment {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position)
+            return DataFragment.newInstance(position)
         }
 
         override fun getItemCount(): Int {
